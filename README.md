@@ -3,7 +3,7 @@
   PROJECT FROSTBORN — The Nordians
   Oluşturulma   : 2026-07-08
   Son Güncelleme: 2026-07-08
-  Dosya Sürümü  : Update 2
+  Dosya Sürümü  : Update 3
   dev By Proftvv
   ═══════════════════════════════════════════════
 -->
@@ -16,7 +16,7 @@
 
 *"Kuzeyden doğanlar, sahada birleşir."*
 
-![Version](https://img.shields.io/badge/S%C3%BCr%C3%BCm-0.0.001-88C0D0?style=for-the-badge)
+![Version](https://img.shields.io/badge/S%C3%BCr%C3%BCm-0.1.000-88C0D0?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
@@ -111,7 +111,7 @@ BIFROST ──► MIDGARD ──► HEIMDALL ──► VALHALLA ──► ODIN �
 
 | Faz | Kod Adı | Kapsam | Durum |
 |:---:|---------|--------|:---:|
-| 0 | 🌈 **BIFROST** | Proje altyapısı, tasarım sistemi | ⏳ |
+| 0 | 🌈 **BIFROST** | Proje altyapısı, tasarım sistemi | ✅ |
 | 1 | 🏔️ **MIDGARD** | Genel site — vitrin sayfaları | ⏳ |
 | 2 | 👁️ **HEIMDALL** | Kimlik doğrulama & kayıt sistemi | ⏳ |
 | 3 | 🏛️ **VALHALLA** | Üye paneli & rütbe sistemi | ⏳ |

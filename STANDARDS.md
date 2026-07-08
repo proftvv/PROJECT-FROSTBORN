@@ -3,7 +3,7 @@
   PROJECT FROSTBORN — The Nordians
   Oluşturulma   : 2026-07-08
   Son Güncelleme: 2026-07-08
-  Dosya Sürümü  : Update 1
+  Dosya Sürümü  : Update 2
   dev By Proftvv
   ═══════════════════════════════════════════════
 -->
@@ -142,7 +142,7 @@ Tüm hata kodları `FRB-[MODÜL]-[NUMARA]` formatındadır.
 
 <div align="center">
 
-**Mevcut Proje Sürümü: `0.0.001`**
+**Mevcut Proje Sürümü: `0.1.000`**
 
 ❄️ *dev By Proftvv* ❄️
 
