@@ -1,0 +1,97 @@
+/**
+ * ═══════════════════════════════════════════════
+ * PROJECT FROSTBORN — The Nordians
+ * Oluşturulma   : 2026-07-08
+ * Son Güncelleme: 2026-07-08
+ * Dosya Sürümü  : Update 1
+ * dev By Proftvv
+ * ═══════════════════════════════════════════════
+ */
+
+@import "tailwindcss";
+
+@theme {
+  /* ── Polar Night (koyu zeminler) ── */
+  --color-night-950: #0b0e14;
+  --color-night-900: #10141c;
+  --color-night-800: #2e3440;
+  --color-night-700: #3b4252;
+  --color-night-600: #434c5e;
+  --color-night-500: #4c566a;
+
+  /* ── Snow Storm (açık tonlar) ── */
+  --color-snow-100: #eceff4;
+  --color-snow-200: #e5e9f0;
+  --color-snow-300: #d8dee9;
+
+  /* ── Frost (buz mavileri) ── */
+  --color-frost-teal: #8fbcbb;
+  --color-frost-ice: #88c0d0;
+  --color-frost-sky: #81a1c1;
+  --color-frost-deep: #5e81ac;
+
+  /* ── Aurora (vurgu renkleri) ── */
+  --color-aurora-red: #bf616a;
+  --color-aurora-orange: #d08770;
+  --color-aurora-gold: #ebcb8b;
+  --color-aurora-green: #a3be8c;
+  --color-aurora-purple: #b48ead;
+
+  /* ── Fontlar ── */
+  --font-display: var(--font-cinzel), serif;
+  --font-sans: var(--font-inter), sans-serif;
+
+  /* ── Animasyon ── */
+  --animate-aurora: aurora 14s ease-in-out infinite alternate;
+
+  @keyframes aurora {
+    0% {
+      transform: translate3d(-8%, -4%, 0) scale(1);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translate3d(6%, 3%, 0) scale(1.15);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translate3d(-4%, 5%, 0) scale(1.05);
+      opacity: 0.6;
+    }
+  }
+}
+
+:root {
+  --background: var(--color-night-950);
+  --foreground: var(--color-snow-100);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-frost-ice);
+  color: var(--color-night-950);
+}
+
+/* ── Kaydırma çubuğu ── */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-night-900);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-night-600);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-frost-deep);
+}
