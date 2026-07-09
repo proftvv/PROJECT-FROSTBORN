@@ -1,8 +1,8 @@
 // ═══════════════════════════════════════════════
 // PROJECT FROSTBORN — The Nordians
 // Oluşturulma   : 2026-07-09
-// Son Güncelleme: 2026-07-09
-// Dosya Sürümü  : Update 2
+// Son Güncelleme: 2026-07-10
+// Dosya Sürümü  : Update 3
 // dev By Proftvv
 // ═══════════════════════════════════════════════
 
@@ -144,4 +144,17 @@ model ChatMessage {
   author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@index([createdAt])
+}
+
+// Denetim kaydı — kim, ne zaman, ne yaptı
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String? // Silinen kullanıcılarda null kalabilsin
+  actorName String
+  action    String // Örn: ROLE_UPDATE, APP_APPROVE
+  detail    String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([action])
 }
