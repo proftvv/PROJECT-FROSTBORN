@@ -1,0 +1,58 @@
+/**
+ * ═══════════════════════════════════════════════
+ * PROJECT FROSTBORN — The Nordians
+ * Oluşturulma   : 2026-07-09
+ * Son Güncelleme: 2026-07-09
+ * Dosya Sürümü  : Update 1
+ * dev By Proftvv
+ * ═══════════════════════════════════════════════
+ *
+ * Resend ile e-posta gönderimi.
+ */
+
+import { Resend } from "resend";
+
+const FROM = "The Nordians <onboarding@resend.dev>";
+
+function getClient(): Resend | null {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return null;
+  return new Resend(key);
+}
+
+export async function sendVerificationEmail(
+  to: string,
+  name: string,
+  code: string,
+): Promise<{ ok: boolean; error?: string }> {
+  const resend = getClient();
+
+  // Geliştirme: anahtar yoksa konsola yaz
+  if (!resend) {
+    console.log(`[MAIL:DEV] ${to} için doğrulama kodu: ${code}`);
+    return { ok: true };
+  }
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to,
+      subject: "The Nordians — E-posta Doğrulama",
+      html: `
+        <div style="background:#0b0e14;color:#eceff4;padding:40px;font-family:Arial,sans-serif;border-radius:12px;max-width:480px;margin:0 auto">
+          <h1 style="color:#88c0d0;letter-spacing:3px;text-align:center">THE NORDIANS</h1>
+          <p>Merhaba ${name},</p>
+          <p>Aramıza hoş geldin. Hesabını doğrulamak için kodun:</p>
+          <p style="font-size:32px;letter-spacing:8px;text-align:center;color:#88c0d0;font-weight:bold">${code}</p>
+          <p style="color:#d8dee9;font-size:13px">Bu kod 15 dakika geçerlidir. Sen istemediysen bu e-postayı yok say.</p>
+          <hr style="border:none;border-top:1px solid #2e3440;margin:24px 0" />
+          <p style="color:#4c566a;font-size:11px;text-align:center">The Nordians · Marmara · Çanakkale · Antalya</p>
+        </div>
+      `,
+    });
+    if (error) return { ok: false, error: "FRB-MAIL-400" };
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "FRB-MAIL-400" };
+  }
+}

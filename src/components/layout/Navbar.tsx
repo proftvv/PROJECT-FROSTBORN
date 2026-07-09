@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-08
- * Son Güncelleme: 2026-07-08
- * Dosya Sürümü  : Update 1
+ * Son Güncelleme: 2026-07-09
+ * Dosya Sürümü  : Update 2
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  */
@@ -13,6 +13,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 
@@ -27,6 +28,7 @@ const LINKS = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -70,11 +72,26 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link href="/giris" className="ml-3">
-            <Button size="sm" variant="outline">
-              Giriş
-            </Button>
-          </Link>
+          {session?.user ? (
+            <div className="ml-3 flex items-center gap-2">
+              <Link href="/panel">
+                <Button size="sm">Panel</Button>
+              </Link>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => signOut({ callbackUrl: "/" })}
+              >
+                Çıkış
+              </Button>
+            </div>
+          ) : (
+            <Link href="/giris" className="ml-3">
+              <Button size="sm" variant="outline">
+                Giriş
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Mobil menü butonu */}
@@ -119,11 +136,29 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Link href="/giris" className="mt-2">
-                <Button size="sm" variant="outline" className="w-full">
-                  Giriş
-                </Button>
-              </Link>
+              {session?.user ? (
+                <div className="mt-2 flex flex-col gap-2">
+                  <Link href="/panel">
+                    <Button size="sm" className="w-full">
+                      Panel
+                    </Button>
+                  </Link>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="w-full"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                  >
+                    Çıkış
+                  </Button>
+                </div>
+              ) : (
+                <Link href="/giris" className="mt-2">
+                  <Button size="sm" variant="outline" className="w-full">
+                    Giriş
+                  </Button>
+                </Link>
+              )}
             </div>
           </motion.div>
         )}
