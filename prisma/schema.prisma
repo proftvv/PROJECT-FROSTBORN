@@ -2,7 +2,7 @@
 // PROJECT FROSTBORN — The Nordians
 // Oluşturulma   : 2026-07-09
 // Son Güncelleme: 2026-07-10
-// Dosya Sürümü  : Update 4
+// Dosya Sürümü  : Update 5
 // dev By Proftvv
 // ═══════════════════════════════════════════════
 
@@ -52,6 +52,7 @@ model User {
   chatMessages      ChatMessage[]
   forumTopics       ForumTopic[]
   forumPosts        ForumPost[]
+  forumProfile      ForumProfile?
   events            Event[]
   eventRsvps        EventRsvp[]
   galleryItems      GalleryItem[]
@@ -186,6 +187,8 @@ model ForumTopic {
   authorId    String
   pinned      Boolean     @default(false)
   locked      Boolean     @default(false)
+  viewCount   Int         @default(0)
+  lastViewedAt DateTime?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
@@ -194,6 +197,21 @@ model ForumTopic {
   posts    ForumPost[]
 
   @@index([categoryId, createdAt])
+  @@index([viewCount])
+  @@index([lastViewedAt])
+}
+
+model ForumProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  bio             String?
+  signature       String?
+  favoriteReplica String?
+  playStyle       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ForumPost {

@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-08
- * Son Güncelleme: 2026-07-09
- * Dosya Sürümü  : Update 2
+ * Son Güncelleme: 2026-07-10
+ * Dosya Sürümü  : Update 3
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  */
@@ -22,6 +22,7 @@ const LINKS = [
   { href: "/hakkimizda", label: "Hakkımızda" },
   { href: "/takimimiz", label: "Takımımız" },
   { href: "/sahalar", label: "Sahalarımız" },
+  { href: "/panel/forum", label: "Forum" },
   { href: "/galeri", label: "Galeri" },
   { href: "/iletisim", label: "İletişim" },
 ];

@@ -99,6 +99,61 @@ export async function createForumPost(formData: {
   return { ok: true, message: "Yanıt eklendi." };
 }
 
+const forumProfileSchema = z.object({
+  bio: z.string().max(400, "Biyografi en fazla 400 karakter").optional().default(""),
+  signature: z.string().max(240, "İmza en fazla 240 karakter").optional().default(""),
+  favoriteReplica: z.string().max(80, "Replica alanı çok uzun").optional().default(""),
+  playStyle: z.string().max(80, "Oyun stili alanı çok uzun").optional().default(""),
+});
+
+export async function updateForumProfile(formData: {
+  bio?: string;
+  signature?: string;
+  favoriteReplica?: string;
+  playStyle?: string;
+}): Promise<ActionResult> {
+  const user = await requireSessionUser();
+  if (!user) return { ok: false, error: "Oturum yok. [FRB-AUTH-101]" };
+
+  const parsed = forumProfileSchema.safeParse(formData);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0].message + " [FRB-API-300]" };
+  }
+
+  await prisma.forumProfile.upsert({
+    where: { userId: user.id },
+    create: {
+      userId: user.id,
+      bio: parsed.data.bio?.trim() || null,
+      signature: parsed.data.signature?.trim() || null,
+      favoriteReplica: parsed.data.favoriteReplica?.trim() || null,
+      playStyle: parsed.data.playStyle?.trim() || null,
+    },
+    update: {
+      bio: parsed.data.bio?.trim() || null,
+      signature: parsed.data.signature?.trim() || null,
+      favoriteReplica: parsed.data.favoriteReplica?.trim() || null,
+      playStyle: parsed.data.playStyle?.trim() || null,
+    },
+  });
+
+  revalidatePath("/panel/forum/profil");
+  revalidatePath("/panel/forum");
+  return { ok: true, message: "Forum profili güncellendi." };
+}
+
+export async function recordTopicView(topicId: string) {
+  const user = await requireSessionUser();
+  if (!user) return;
+  await prisma.forumTopic.update({
+    where: { id: topicId },
+    data: {
+      viewCount: { increment: 1 },
+      lastViewedAt: new Date(),
+    },
+  });
+}
+
 const rsvpSchema = z.object({
   eventId: z.string().min(1),
   status: z.enum(["GOING", "MAYBE", "DECLINED"] satisfies [RsvpStatus, ...RsvpStatus[]]),

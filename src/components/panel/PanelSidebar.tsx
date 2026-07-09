@@ -29,6 +29,7 @@ const ITEMS: NavItem[] = [
   { href: "/panel/profil", label: "Profil", icon: "☺", minLevel: 2 },
   { href: "/panel/duyurular", label: "Duyurular", icon: "✦", minLevel: 2 },
   { href: "/panel/forum", label: "Forum", icon: "📜", minLevel: 2 },
+  { href: "/panel/forum/profil", label: "Forum Profili", icon: "✎", minLevel: 2 },
   { href: "/panel/etkinlikler", label: "Etkinlikler", icon: "🛡", minLevel: 2 },
   { href: "/panel/basvuru", label: "Takıma Başvur", icon: "⚔", minLevel: 2 },
   { href: "/panel/haritalar", label: "Takım Haritaları", icon: "🗺", minLevel: 3 },
