@@ -1,0 +1,71 @@
+// ═══════════════════════════════════════════════
+// PROJECT FROSTBORN — The Nordians
+// Oluşturulma   : 2026-07-09
+// Son Güncelleme: 2026-07-09
+// Dosya Sürümü  : Update 1
+// dev By Proftvv
+// ═══════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── 6 kademeli rütbe modeli ──
+enum Role {
+  DEVELOPER // Seviye 6 — sistemin tamamı
+  BASKAN // Seviye 5 — tüm yetkiler
+  BASKAN_YARDIMCISI // Seviye 5 — başkanla eşdeğer
+  YONETICI // Seviye 4 — admin paneli
+  NORDIAN // Seviye 3 — takım oyuncusu
+  UYE // Seviye 2 — normal üye
+}
+
+enum MembershipStatus {
+  PENDING // Başvuru bekliyor
+  ACTIVE // Aktif üye
+  SUSPENDED // Askıya alınmış
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String
+  name          String
+  callsign      String?   @unique
+  region        String?
+  role          Role      @default(UYE)
+  status        MembershipStatus @default(PENDING)
+  avatarUrl     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  verificationCodes VerificationCode[]
+
+  @@index([role])
+  @@index([status])
+}
+
+// E-posta doğrulama & şifre sıfırlama kodları
+enum CodePurpose {
+  EMAIL_VERIFY
+  PASSWORD_RESET
+}
+
+model VerificationCode {
+  id        String      @id @default(cuid())
+  userId    String
+  code      String
+  purpose   CodePurpose
+  expiresAt DateTime
+  createdAt DateTime    @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose])
+}

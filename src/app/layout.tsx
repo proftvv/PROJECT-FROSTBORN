@@ -3,7 +3,7 @@
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-08
  * Son Güncelleme: 2026-07-09
- * Dosya Sürümü  : Update 3
+ * Dosya Sürümü  : Update 4
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  */
@@ -12,6 +12,7 @@ import type { Metadata } from "next";
 import { Metamorphous, Inter } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/providers/SmoothScroll";
+import AuthProvider from "@/components/providers/AuthProvider";
 import AuroraBackground from "@/components/effects/AuroraBackground";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -48,12 +49,14 @@ export default function RootLayout({
       className={`${metamorphous.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <SmoothScroll>
-          <AuroraBackground />
-          <Navbar />
-          <div className="flex flex-1 flex-col pt-16">{children}</div>
-          <Footer />
-        </SmoothScroll>
+        <AuthProvider>
+          <SmoothScroll>
+            <AuroraBackground />
+            <Navbar />
+            <div className="flex flex-1 flex-col pt-16">{children}</div>
+            <Footer />
+          </SmoothScroll>
+        </AuthProvider>
       </body>
     </html>
   );
