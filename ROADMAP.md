@@ -3,7 +3,7 @@
   PROJECT FROSTBORN — The Nordians
   Oluşturulma   : 2026-07-08
   Son Güncelleme: 2026-07-09
-  Dosya Sürümü  : Update 5
+  Dosya Sürümü  : Update 6
   dev By Proftvv
   ═══════════════════════════════════════════════
 -->
@@ -82,17 +82,17 @@
 > Valhalla'ya yalnızca seçilmiş savaşçılar girer. Her rütbe, salonda farklı bir yere oturur.
 
 ### Görevler
-- [ ] Panel layout (sidebar + rütbeye göre menü)
-- [ ] Rol bazlı erişim kontrolü (middleware + RBAC)
-- [ ] **Üye** erişimi: profil yönetimi, forum erişimi, duyurular
-- [ ] **The Nordians** erişimi:
+- [x] Panel layout (sidebar + rütbeye göre menü)
+- [x] Rol bazlı erişim kontrolü (middleware + RBAC)
+- [x] **Üye** erişimi: profil yönetimi, duyurular
+- [x] **The Nordians** erişimi:
   - Takım haritaları (saha krokileri)
   - Eğitim içerikleri (doküman/video arşivi)
   - Takıma özel sohbet alanı
-- [ ] Profil sayfası: avatar, callsign, bölge, rütbe rozeti
-- [ ] Takıma katılım başvuru formu (panel içinden)
+- [x] Profil sayfası: callsign, bölge, rütbe rozeti
+- [x] Takıma katılım başvuru formu (panel içinden)
 
-**Çıktı:** Rütbeye göre şekillenen tam işlevsel üye paneli.
+**Çıktı:** Rütbeye göre şekillenen tam işlevsel üye paneli. ✅ **TAMAMLANDI — 0.4.000**
 
 ---
 
