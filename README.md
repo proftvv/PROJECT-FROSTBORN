@@ -3,7 +3,7 @@
   PROJECT FROSTBORN — The Nordians
   Oluşturulma   : 2026-07-08
   Son Güncelleme: 2026-07-10
-  Dosya Sürümü  : Update 7
+  Dosya Sürümü  : Update 8
   dev By Proftvv
   ═══════════════════════════════════════════════
 -->
@@ -16,7 +16,7 @@
 
 *"Kuzeyden doğanlar, sahada birleşir."*
 
-![Version](https://img.shields.io/badge/S%C3%BCr%C3%BCm-0.5.000-88C0D0?style=for-the-badge)
+![Version](https://img.shields.io/badge/S%C3%BCr%C3%BCm-0.6.000-88C0D0?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
@@ -116,7 +116,7 @@ BIFROST ──► MIDGARD ──► HEIMDALL ──► VALHALLA ──► ODIN �
 | 2 | 👁️ **HEIMDALL** | Kimlik doğrulama & kayıt sistemi | ✅ |
 | 3 | 🏛️ **VALHALLA** | Üye paneli & rütbe sistemi | ✅ |
 | 4 | ⚜️ **ODIN** | Admin paneli & başvuru yönetimi | ✅ |
-| 5 | 📜 **SKALD** | Forum & takım içi içerikler | 🔨 |
+| 5 | 📜 **SKALD** | Forum & takım içi içerikler | ✅ |
 | 6 | 🐺 **FENRIR** | Mobil uygulama | 🔮 |
 
 ---

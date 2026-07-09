@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-09
- * Son Güncelleme: 2026-07-09
- * Dosya Sürümü  : Update 2
+ * Son Güncelleme: 2026-07-10
+ * Dosya Sürümü  : Update 3
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  *
@@ -28,6 +28,8 @@ const ITEMS: NavItem[] = [
   { href: "/panel", label: "Genel Bakış", icon: "❖", minLevel: 2 },
   { href: "/panel/profil", label: "Profil", icon: "☺", minLevel: 2 },
   { href: "/panel/duyurular", label: "Duyurular", icon: "✦", minLevel: 2 },
+  { href: "/panel/forum", label: "Forum", icon: "📜", minLevel: 2 },
+  { href: "/panel/etkinlikler", label: "Etkinlikler", icon: "🛡", minLevel: 2 },
   { href: "/panel/basvuru", label: "Takıma Başvur", icon: "⚔", minLevel: 2 },
   { href: "/panel/haritalar", label: "Takım Haritaları", icon: "🗺", minLevel: 3 },
   { href: "/panel/egitim", label: "Eğitim İçerikleri", icon: "🎯", minLevel: 3 },
@@ -38,8 +40,10 @@ const ADMIN_ITEMS: NavItem[] = [
   { href: "/panel/admin", label: "Odin Dashboard", icon: "⚜", minLevel: 4 },
   { href: "/panel/admin/basvurular", label: "Başvurular", icon: "📥", minLevel: 4 },
   { href: "/panel/admin/uyeler", label: "Üye Yönetimi", icon: "♟", minLevel: 4 },
+  { href: "/panel/admin/forum", label: "Forum", icon: "📜", minLevel: 4 },
   { href: "/panel/admin/duyurular", label: "Duyurular", icon: "📢", minLevel: 4 },
   { href: "/panel/admin/icerikler", label: "İçerikler", icon: "🗂", minLevel: 4 },
+  { href: "/panel/admin/galeri", label: "Galeri", icon: "🖼", minLevel: 4 },
 ];
 
 export default function PanelSidebar({

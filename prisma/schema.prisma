@@ -2,7 +2,7 @@
 // PROJECT FROSTBORN — The Nordians
 // Oluşturulma   : 2026-07-09
 // Son Güncelleme: 2026-07-10
-// Dosya Sürümü  : Update 3
+// Dosya Sürümü  : Update 4
 // dev By Proftvv
 // ═══════════════════════════════════════════════
 
@@ -50,6 +50,11 @@ model User {
   announcements     Announcement[]
   teamContents      TeamContent[]
   chatMessages      ChatMessage[]
+  forumTopics       ForumTopic[]
+  forumPosts        ForumPost[]
+  events            Event[]
+  eventRsvps        EventRsvp[]
+  galleryItems      GalleryItem[]
 
   @@index([role])
   @@index([status])
@@ -157,4 +162,99 @@ model AuditLog {
 
   @@index([createdAt])
   @@index([action])
+}
+
+// ── SKALD: Forum, etkinlik ve galeri modelleri ──
+
+model ForumCategory {
+  id          String      @id @default(cuid())
+  title       String      @unique
+  description String
+  minLevel    Int         @default(2)
+  createdAt   DateTime    @default(now())
+
+  topics ForumTopic[]
+
+  @@index([minLevel])
+}
+
+model ForumTopic {
+  id          String      @id @default(cuid())
+  title       String
+  body        String
+  categoryId  String
+  authorId    String
+  pinned      Boolean     @default(false)
+  locked      Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  category ForumCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  author   User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  posts    ForumPost[]
+
+  @@index([categoryId, createdAt])
+}
+
+model ForumPost {
+  id        String    @id @default(cuid())
+  body      String
+  topicId   String
+  authorId  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  topic   ForumTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  author  User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([topicId, createdAt])
+}
+
+model Event {
+  id          String      @id @default(cuid())
+  title       String
+  description String
+  location    String
+  startsAt    DateTime
+  endsAt      DateTime?
+  authorId    String
+  createdAt   DateTime    @default(now())
+
+  author User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  rsvps  EventRsvp[]
+
+  @@index([startsAt])
+}
+
+enum RsvpStatus {
+  GOING
+  MAYBE
+  DECLINED
+}
+
+model EventRsvp {
+  id        String     @id @default(cuid())
+  eventId    String
+  userId     String
+  status     RsvpStatus @default(GOING)
+  note       String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([status])
+}
+
+model GalleryItem {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String
+  authorId    String
+  createdAt   DateTime  @default(now())
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
