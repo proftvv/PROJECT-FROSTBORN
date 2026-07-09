@@ -3,7 +3,7 @@
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-09
  * Son Güncelleme: 2026-07-09
- * Dosya Sürümü  : Update 1
+ * Dosya Sürümü  : Update 2
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  *
@@ -43,4 +43,21 @@ export function isAdmin(role: Role): boolean {
 /** Takım içeriklerine erişebilir mi? (Nordian ve üstü) */
 export function isNordian(role: Role): boolean {
   return hasLevel(role, 3);
+}
+
+/** Yönetici, hedef kullanıcı üzerinde işlem yapabilir mi? */
+export function canManage(actor: Role, target: Role): boolean {
+  if (actor === "DEVELOPER") return true;
+  if (target === "DEVELOPER") return false;
+  return ROLE_LEVELS[actor] >= ROLE_LEVELS[target] && ROLE_LEVELS[actor] >= 4;
+}
+
+/** Yöneticinin atayabileceği rütbeler. */
+export function assignableRoles(actor: Role): Role[] {
+  if (actor === "DEVELOPER")
+    return ["DEVELOPER", "BASKAN", "BASKAN_YARDIMCISI", "YONETICI", "NORDIAN", "UYE"];
+  if (ROLE_LEVELS[actor] === 5)
+    return ["BASKAN", "BASKAN_YARDIMCISI", "YONETICI", "NORDIAN", "UYE"];
+  if (ROLE_LEVELS[actor] === 4) return ["NORDIAN", "UYE"];
+  return [];
 }

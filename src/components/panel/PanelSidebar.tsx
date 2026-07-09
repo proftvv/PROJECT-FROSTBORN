@@ -3,7 +3,7 @@
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-09
  * Son Güncelleme: 2026-07-09
- * Dosya Sürümü  : Update 1
+ * Dosya Sürümü  : Update 2
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  *
@@ -34,6 +34,11 @@ const ITEMS: NavItem[] = [
   { href: "/panel/sohbet", label: "Takım Sohbeti", icon: "💬", minLevel: 3 },
 ];
 
+const ADMIN_ITEMS: NavItem[] = [
+  { href: "/panel/admin/basvurular", label: "Başvurular", icon: "📥", minLevel: 4 },
+  { href: "/panel/admin/uyeler", label: "Üye Yönetimi", icon: "♟", minLevel: 4 },
+];
+
 export default function PanelSidebar({
   role,
   callsign,
@@ -46,6 +51,7 @@ export default function PanelSidebar({
   const pathname = usePathname();
   const level = ROLE_LEVELS[role];
   const visible = ITEMS.filter((i) => level >= i.minLevel);
+  const visibleAdmin = ADMIN_ITEMS.filter((i) => level >= i.minLevel);
 
   return (
     <aside className="w-full shrink-0 lg:w-60">
@@ -79,6 +85,31 @@ export default function PanelSidebar({
             </Link>
           );
         })}
+
+        {visibleAdmin.length > 0 && (
+          <>
+            <p className="mt-4 mb-1 px-3 text-[10px] font-medium uppercase tracking-[0.3em] text-aurora-gold/70">
+              Odin — Yönetim
+            </p>
+            {visibleAdmin.map((item) => {
+              const active = pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+                    active
+                      ? "bg-night-800/80 text-aurora-gold"
+                      : "text-snow-300/70 hover:bg-night-800/40 hover:text-snow-100"
+                  }`}
+                >
+                  <span className="w-5 text-center">{item.icon}</span>
+                  {item.label}
+                </Link>
+              );
+            })}
+          </>
+        )}
       </nav>
     </aside>
   );
