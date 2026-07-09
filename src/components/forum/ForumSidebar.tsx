@@ -18,6 +18,12 @@ type TopicLink = {
   href: string;
 };
 
+type ContentLink = {
+  id: string;
+  title: string;
+  meta: string;
+};
+
 export default function ForumSidebar({
   displayName,
   roleLabel,
@@ -26,6 +32,8 @@ export default function ForumSidebar({
   playStyle,
   popular,
   recent,
+  latestContent,
+  memberStats,
 }: {
   displayName: string;
   roleLabel: string;
@@ -34,9 +42,33 @@ export default function ForumSidebar({
   playStyle: string | null;
   popular: TopicLink[];
   recent: TopicLink[];
+  latestContent: ContentLink[];
+  memberStats: { onlineLabel: string; totalMembers: number; totalTopics: number; totalPosts: number };
 }) {
   return (
     <aside className="space-y-4 xl:order-first">
+      <Card>
+        <p className="text-xs uppercase tracking-[0.25em] text-frost-ice/80">Forum İstatistik</p>
+        <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <p className="text-snow-300/45">Üye</p>
+            <p className="font-display text-snow-100">{memberStats.totalMembers}</p>
+          </div>
+          <div>
+            <p className="text-snow-300/45">Konu</p>
+            <p className="font-display text-snow-100">{memberStats.totalTopics}</p>
+          </div>
+          <div>
+            <p className="text-snow-300/45">Mesaj</p>
+            <p className="font-display text-snow-100">{memberStats.totalPosts}</p>
+          </div>
+          <div>
+            <p className="text-snow-300/45">Çevrim içi</p>
+            <p className="text-frost-ice">{memberStats.onlineLabel}</p>
+          </div>
+        </div>
+      </Card>
+
       <Card>
         <p className="text-xs uppercase tracking-[0.25em] text-frost-ice/80">Forum Profili</p>
         <h2 className="font-display mt-2 text-lg text-snow-100">{displayName}</h2>
@@ -81,6 +113,22 @@ export default function ForumSidebar({
                 <p className="text-sm text-snow-100 hover:text-frost-ice">{topic.title}</p>
                 <p className="text-xs text-snow-300/50">{topic.meta}</p>
               </Link>
+            ))
+          )}
+        </div>
+      </Card>
+
+      <Card>
+        <p className="text-xs uppercase tracking-[0.25em] text-frost-ice/80">En Son İçerikler</p>
+        <div className="mt-3 space-y-3">
+          {latestContent.length === 0 ? (
+            <p className="text-sm text-snow-300/60">Henüz içerik yok.</p>
+          ) : (
+            latestContent.map((item) => (
+              <div key={item.id} className="block">
+                <p className="text-sm text-snow-100">{item.title}</p>
+                <p className="text-xs text-snow-300/50">{item.meta}</p>
+              </div>
             ))
           )}
         </div>

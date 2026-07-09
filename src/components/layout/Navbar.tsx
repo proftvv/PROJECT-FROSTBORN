@@ -42,6 +42,12 @@ export default function Navbar() {
 
   useEffect(() => setOpen(false), [pathname]);
 
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    if (href === "/forum") return pathname.startsWith("/forum");
+    return pathname === href;
+  };
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
@@ -65,7 +71,7 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               className={`rounded-md px-3 py-1.5 text-sm transition-colors duration-200 ${
-                pathname === link.href
+                isActive(link.href)
                   ? "text-frost-ice"
                   : "text-snow-300/75 hover:text-snow-100"
               }`}
@@ -129,7 +135,7 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   className={`rounded-md px-3 py-2.5 text-sm ${
-                    pathname === link.href
+                    isActive(link.href)
                       ? "bg-night-800/60 text-frost-ice"
                       : "text-snow-300/80"
                   }`}

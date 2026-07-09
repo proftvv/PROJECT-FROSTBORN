@@ -3,7 +3,7 @@
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-10
  * Son Güncelleme: 2026-07-10
- * Dosya Sürümü  : Update 1
+ * Dosya Sürümü  : Update 2
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  */
@@ -46,23 +46,39 @@ export default async function ForumCategoryPage({ params }: { params: Promise<{ 
 
       <TopicForm categoryId={category.id} />
 
-      <div className="space-y-3">
-        {category.topics.length === 0 ? (
-          <Card className="text-center"><p className="text-sm text-snow-300/60">Henüz konu açılmadı.</p></Card>
-        ) : category.topics.map((topic) => (
-          <Link key={topic.id} href={`/forum/konu/${topic.id}`}>
-            <Card>
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h2 className="font-display text-lg text-snow-100">{topic.pinned ? "📌 " : ""}{topic.title}</h2>
-                  <p className="mt-1 text-xs text-snow-300/50">{topic.author.callsign ?? topic.author.name} · {topic.createdAt.toLocaleDateString("tr-TR")} · {topic.viewCount} görüntüleme</p>
-                </div>
-                <span className="text-xs text-frost-ice/80">{topic.posts.length} yanıt</span>
-              </div>
-              <p className="mt-3 line-clamp-2 text-sm text-snow-300/70">{topic.body}</p>
-            </Card>
-          </Link>
-        ))}
+      <div className="overflow-hidden rounded-2xl border border-night-800/70 bg-night-900/45">
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead className="border-b border-night-800/70 bg-night-950/45 text-snow-300/50">
+              <tr>
+                <th className="px-4 py-3 text-left font-medium">Konu</th>
+                <th className="px-4 py-3 text-center font-medium">Cevap</th>
+                <th className="px-4 py-3 text-center font-medium">Hit</th>
+                <th className="px-4 py-3 text-left font-medium">Son Gönderim</th>
+              </tr>
+            </thead>
+            <tbody>
+              {category.topics.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-4 py-10 text-center text-sm text-snow-300/60">Henüz konu açılmadı.</td>
+                </tr>
+              ) : category.topics.map((topic, index) => (
+                <tr key={topic.id} className={index % 2 === 0 ? "bg-night-900/25" : "bg-night-950/20"}>
+                  <td className="px-4 py-3">
+                    <Link href={`/forum/konu/${topic.id}`} className="font-medium text-snow-100 hover:text-frost-ice">
+                      {topic.pinned ? "📌 " : ""}{topic.title}
+                    </Link>
+                    <p className="mt-1 text-xs text-snow-300/50">{topic.author.callsign ?? topic.author.name}</p>
+                    <p className="mt-1 line-clamp-2 text-xs text-snow-300/45">{topic.body}</p>
+                  </td>
+                  <td className="px-4 py-3 text-center text-snow-300/70">{topic.posts.length}</td>
+                  <td className="px-4 py-3 text-center text-snow-300/70">{topic.viewCount}</td>
+                  <td className="px-4 py-3 text-snow-300/70">{topic.updatedAt.toLocaleString("tr-TR")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
