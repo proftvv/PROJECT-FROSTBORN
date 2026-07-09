@@ -35,8 +35,11 @@ const ITEMS: NavItem[] = [
 ];
 
 const ADMIN_ITEMS: NavItem[] = [
+  { href: "/panel/admin", label: "Odin Dashboard", icon: "⚜", minLevel: 4 },
   { href: "/panel/admin/basvurular", label: "Başvurular", icon: "📥", minLevel: 4 },
   { href: "/panel/admin/uyeler", label: "Üye Yönetimi", icon: "♟", minLevel: 4 },
+  { href: "/panel/admin/duyurular", label: "Duyurular", icon: "📢", minLevel: 4 },
+  { href: "/panel/admin/icerikler", label: "İçerikler", icon: "🗂", minLevel: 4 },
 ];
 
 export default function PanelSidebar({
