@@ -3,7 +3,7 @@
   PROJECT FROSTBORN — The Nordians
   Oluşturulma   : 2026-07-08
   Son Güncelleme: 2026-07-10
-  Dosya Sürümü  : Update 7
+  Dosya Sürümü  : Update 8
   dev By Proftvv
   ═══════════════════════════════════════════════
 -->
@@ -120,13 +120,13 @@
 > Skald'lar savaşların hikayelerini anlatır. Topluluğun sesi bu fazda yükselir.
 
 ### Görevler
-- [ ] Forum modülü: kategoriler, konular, cevaplar
-- [ ] Rütbeye özel forum alanları (Nordians-only bölümler)
-- [ ] Etkinlik takvimi (oyun günleri, operasyonlar)
-- [ ] Etkinliğe katılım bildirimi (LFG sistemi)
-- [ ] Galeri yönetimi (admin panelden fotoğraf yükleme)
+- [x] Forum modülü: kategoriler, konular, cevaplar
+- [x] Rütbeye özel forum alanları (Nordians-only bölümler)
+- [x] Etkinlik takvimi (oyun günleri, operasyonlar)
+- [x] Etkinliğe katılım bildirimi (LFG sistemi)
+- [x] Galeri yönetimi (admin panelden fotoğraf yükleme)
 
-**Çıktı:** Yaşayan, kendi kendini besleyen topluluk platformu.
+**Çıktı:** Yaşayan, kendi kendini besleyen topluluk platformu. ✅ **TAMAMLANDI — 0.6.000**
 
 ---
 

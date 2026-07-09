@@ -19,11 +19,13 @@ export const metadata = { title: "ODIN" };
 export default async function AdminDashboardPage() {
   await requireLevel(4);
 
-  const [users, pendingApplications, announcements, contents, logs] = await Promise.all([
+  const [users, pendingApplications, announcements, contents, forumTopics, events, logs] = await Promise.all([
     prisma.user.count(),
     prisma.application.count({ where: { status: "PENDING" } }),
     prisma.announcement.count(),
     prisma.teamContent.count(),
+    prisma.forumTopic.count(),
+    prisma.event.count(),
     prisma.auditLog.findMany({ orderBy: { createdAt: "desc" }, take: 12 }),
   ]);
 
@@ -34,18 +36,22 @@ export default async function AdminDashboardPage() {
         <p className="mt-1 text-sm text-snow-300/60">Komuta merkezi.</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
         <Card><p className="text-xs uppercase tracking-[0.2em] text-snow-300/50">Toplam Üye</p><p className="font-display mt-2 text-2xl text-snow-100">{users}</p></Card>
         <Card><p className="text-xs uppercase tracking-[0.2em] text-snow-300/50">Bekleyen Başvuru</p><p className="font-display mt-2 text-2xl text-aurora-gold">{pendingApplications}</p></Card>
         <Card><p className="text-xs uppercase tracking-[0.2em] text-snow-300/50">Duyurular</p><p className="font-display mt-2 text-2xl text-frost-ice">{announcements}</p></Card>
         <Card><p className="text-xs uppercase tracking-[0.2em] text-snow-300/50">İçerikler</p><p className="font-display mt-2 text-2xl text-aurora-green">{contents}</p></Card>
+        <Card><p className="text-xs uppercase tracking-[0.2em] text-snow-300/50">Forum Konuları</p><p className="font-display mt-2 text-2xl text-snow-100">{forumTopics}</p></Card>
+        <Card><p className="text-xs uppercase tracking-[0.2em] text-snow-300/50">Etkinlikler</p><p className="font-display mt-2 text-2xl text-frost-ice">{events}</p></Card>
       </div>
 
       <div className="flex flex-wrap gap-3">
         <Link href="/panel/admin/basvurular"><Button>Başvuruları Aç</Button></Link>
         <Link href="/panel/admin/uyeler"><Button variant="outline">Üyeleri Aç</Button></Link>
+        <Link href="/panel/admin/forum"><Button variant="outline">Forum</Button></Link>
         <Link href="/panel/admin/duyurular"><Button variant="outline">Duyurular</Button></Link>
         <Link href="/panel/admin/icerikler"><Button variant="outline">İçerikler</Button></Link>
+        <Link href="/panel/admin/galeri"><Button variant="outline">Galeri</Button></Link>
       </div>
 
       <Card>
