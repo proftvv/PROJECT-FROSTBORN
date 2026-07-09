@@ -3,7 +3,7 @@
   PROJECT FROSTBORN — The Nordians
   Oluşturulma   : 2026-07-08
   Son Güncelleme: 2026-07-09
-  Dosya Sürümü  : Update 4
+  Dosya Sürümü  : Update 5
   dev By Proftvv
   ═══════════════════════════════════════════════
 -->
@@ -65,15 +65,15 @@
 > Heimdall, Bifrost köprüsünün bekçisidir. Kimin girip kimin giremeyeceğine o karar verir.
 
 ### Görevler
-- [ ] Neon DB kurulumu + Prisma şeması
-- [ ] Auth.js (NextAuth v5) entegrasyonu
-- [ ] Kayıt olma / Giriş yapma sayfaları
-- [ ] E-posta doğrulama (Resend)
-- [ ] Şifre sıfırlama akışı
-- [ ] Oturum yönetimi — girişte navbar'da **Panel** butonu görünür
-- [ ] Rol altyapısı (6 kademeli rütbe modeli DB'de hazır)
+- [x] Neon DB kurulumu + Prisma şeması
+- [x] Auth.js (NextAuth v5) entegrasyonu
+- [x] Kayıt olma / Giriş yapma sayfaları
+- [x] E-posta doğrulama (Resend)
+- [ ] Şifre sıfırlama akışı *(VALHALLA içinde tamamlanacak)*
+- [x] Oturum yönetimi — girişte navbar'da **Panel** butonu görünür
+- [x] Rol altyapısı (6 kademeli rütbe modeli DB'de hazır)
 
-**Çıktı:** Güvenli, tam işleyen üyelik sistemi.
+**Çıktı:** Güvenli, tam işleyen üyelik sistemi. ✅ **TAMAMLANDI — 0.3.000**
 
 ---
 
