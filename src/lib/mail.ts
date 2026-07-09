@@ -3,7 +3,7 @@
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-09
  * Son Güncelleme: 2026-07-10
- * Dosya Sürümü  : Update 3
+ * Dosya Sürümü  : Update 4
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  *
@@ -12,7 +12,7 @@
 
 import { Resend } from "resend";
 
-const FROM = "The Nordians <onboarding@resend.dev>";
+const FROM = process.env.MAIL_FROM || "The Nordians <noreply@proftvv.com.tr>";
 
 type MailResult = { ok: true } | { ok: false; error: string; reason?: string };
 
