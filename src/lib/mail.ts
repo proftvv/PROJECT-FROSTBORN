@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-09
- * Son Güncelleme: 2026-07-09
- * Dosya Sürümü  : Update 2
+ * Son Güncelleme: 2026-07-10
+ * Dosya Sürümü  : Update 3
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  *
@@ -13,6 +13,8 @@
 import { Resend } from "resend";
 
 const FROM = "The Nordians <onboarding@resend.dev>";
+
+type MailResult = { ok: true } | { ok: false; error: string; reason?: string };
 
 function getClient(): Resend | null {
   const key = process.env.RESEND_API_KEY;
@@ -24,7 +26,7 @@ export async function sendVerificationEmail(
   to: string,
   name: string,
   code: string,
-): Promise<{ ok: boolean; error?: string }> {
+): Promise<MailResult> {
   const resend = getClient();
 
   // Geliştirme: anahtar yoksa konsola yaz
@@ -50,10 +52,20 @@ export async function sendVerificationEmail(
         </div>
       `,
     });
-    if (error) return { ok: false, error: "FRB-MAIL-400" };
+    if (error) {
+      const reason = typeof error.message === "string" ? error.message : undefined;
+      if (reason?.includes("only send testing emails to your own email address")) {
+        return { ok: false, error: "FRB-MAIL-402", reason };
+      }
+      return { ok: false, error: "FRB-MAIL-400", reason };
+    }
     return { ok: true };
-  } catch {
-    return { ok: false, error: "FRB-MAIL-400" };
+  } catch (err) {
+    const reason = err instanceof Error ? err.message : undefined;
+    if (reason?.includes("only send testing emails to your own email address")) {
+      return { ok: false, error: "FRB-MAIL-402", reason };
+    }
+    return { ok: false, error: "FRB-MAIL-400", reason };
   }
 }
 
@@ -62,7 +74,7 @@ export async function sendApplicationResultEmail(
   name: string,
   approved: boolean,
   reply: string,
-): Promise<{ ok: boolean; error?: string }> {
+): Promise<MailResult> {
   const resend = getClient();
 
   if (!resend) {
@@ -92,9 +104,13 @@ export async function sendApplicationResultEmail(
         </div>
       `,
     });
-    if (error) return { ok: false, error: "FRB-MAIL-400" };
+    if (error) return { ok: false, error: "FRB-MAIL-400", reason: error.message };
     return { ok: true };
-  } catch {
-    return { ok: false, error: "FRB-MAIL-400" };
+  } catch (err) {
+    return {
+      ok: false,
+      error: "FRB-MAIL-400",
+      reason: err instanceof Error ? err.message : undefined,
+    };
   }
 }

@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-09
- * Son Güncelleme: 2026-07-09
- * Dosya Sürümü  : Update 1
+ * Son Güncelleme: 2026-07-10
+ * Dosya Sürümü  : Update 2
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  *
@@ -50,16 +50,24 @@ export async function registerUser(formData: {
   const email = parsed.data.email.toLowerCase().trim();
 
   const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
+  if (existing?.emailVerified) {
     return { ok: false, error: "Bu e-posta zaten kayıtlı. [FRB-DB-202]" };
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
-  const user = await prisma.user.create({
-    data: { name, email, passwordHash },
-  });
+  const user = existing
+    ? await prisma.user.update({
+        where: { id: existing.id },
+        data: { name, passwordHash },
+      })
+    : await prisma.user.create({
+        data: { name, email, passwordHash },
+      });
 
   const code = generateCode();
+  await prisma.verificationCode.deleteMany({
+    where: { userId: user.id, purpose: "EMAIL_VERIFY" },
+  });
   await prisma.verificationCode.create({
     data: {
       userId: user.id,
@@ -71,6 +79,23 @@ export async function registerUser(formData: {
 
   const mail = await sendVerificationEmail(email, name, code);
   if (!mail.ok) {
+    if (mail.error === "FRB-MAIL-402") {
+      await prisma.$transaction([
+        prisma.user.update({
+          where: { id: user.id },
+          data: { emailVerified: new Date() },
+        }),
+        prisma.verificationCode.deleteMany({
+          where: { userId: user.id, purpose: "EMAIL_VERIFY" },
+        }),
+      ]);
+
+      return {
+        ok: true,
+        message:
+          "E-posta servisi test modunda olduğu için hesabın doğrudan açıldı. Artık giriş yapabilirsin.",
+      };
+    }
     return { ok: false, error: `E-posta gönderilemedi. [${mail.error}]` };
   }
 
