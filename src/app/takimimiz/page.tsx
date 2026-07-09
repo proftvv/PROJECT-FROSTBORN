@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-08
- * Son Güncelleme: 2026-07-08
- * Dosya Sürümü  : Update 1
+ * Son Güncelleme: 2026-07-09
+ * Dosya Sürümü  : Update 2
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  */
@@ -13,7 +13,7 @@ import PageHero from "@/components/layout/PageHero";
 import Reveal from "@/components/effects/Reveal";
 import Container from "@/components/ui/Container";
 import Card from "@/components/ui/Card";
-import Badge from "@/components/ui/Badge";
+import RuneLabel from "@/components/ui/RuneLabel";
 import { TEAM_REGIONS } from "@/lib/site-data";
 
 export const metadata: Metadata = {
@@ -54,8 +54,8 @@ export default function TeamPage() {
           </div>
 
           <Reveal delay={0.2} className="mt-12 text-center">
-            <Badge tone="purple">Yakında</Badge>
-            <p className="mx-auto mt-4 max-w-xl text-sm text-snow-300/60">
+            <RuneLabel>Yakında</RuneLabel>
+            <p className="mx-auto mt-6 max-w-xl text-sm text-snow-300/60">
               Oyuncu kartları ve kadro detayları çok yakında burada olacak.
               Takım üyeleri, callsign&apos;ları ve uzmanlık alanlarıyla
               tanıtılacak.

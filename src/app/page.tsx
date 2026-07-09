@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-08
- * Son Güncelleme: 2026-07-08
- * Dosya Sürümü  : Update 2
+ * Son Güncelleme: 2026-07-09
+ * Dosya Sürümü  : Update 3
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  */
@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 import PhotoSlider from "@/components/effects/PhotoSlider";
 import Reveal from "@/components/effects/Reveal";
 import Container from "@/components/ui/Container";
-import Badge from "@/components/ui/Badge";
+import RuneLabel from "@/components/ui/RuneLabel";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import { SITE, FIELDS, TEAM_REGIONS } from "@/lib/site-data";
@@ -39,13 +39,13 @@ export default function Home() {
             transition={{ staggerChildren: 0.15 }}
           >
             <motion.div variants={fadeUp} transition={{ duration: 0.7 }}>
-              <Badge tone="frost">{SITE.regions.join(" · ")}</Badge>
+              <RuneLabel>{SITE.regions.join(" · ")}</RuneLabel>
             </motion.div>
 
             <motion.h1
               variants={fadeUp}
               transition={{ duration: 0.7 }}
-              className="font-display mt-6 text-5xl font-bold tracking-wider text-snow-100 sm:text-7xl"
+              className="font-display mt-8 bg-gradient-to-b from-snow-100 via-snow-100 to-frost-ice/70 bg-clip-text text-5xl tracking-[0.12em] text-transparent sm:text-7xl"
             >
               THE NORDIANS
             </motion.h1>
@@ -90,8 +90,8 @@ export default function Home() {
       <section className="py-24">
         <Container>
           <Reveal className="text-center">
-            <Badge tone="gold">Üç Bölge, Tek Takım</Badge>
-            <h2 className="font-display mt-4 text-3xl font-bold tracking-wide text-snow-100 sm:text-4xl">
+            <RuneLabel>Üç Bölge, Tek Takım</RuneLabel>
+            <h2 className="font-display mt-6 text-3xl tracking-wide text-snow-100 sm:text-4xl">
               Nerelerdeyiz?
             </h2>
           </Reveal>
@@ -117,8 +117,8 @@ export default function Home() {
       <section className="py-24">
         <Container>
           <Reveal className="text-center">
-            <Badge tone="green">Antalya</Badge>
-            <h2 className="font-display mt-4 text-3xl font-bold tracking-wide text-snow-100 sm:text-4xl">
+            <RuneLabel>Antalya</RuneLabel>
+            <h2 className="font-display mt-6 text-3xl tracking-wide text-snow-100 sm:text-4xl">
               Kendi Sahalarımız
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-snow-300/70">
@@ -130,7 +130,9 @@ export default function Home() {
             {FIELDS.map((field, i) => (
               <Reveal key={field.slug} delay={i * 0.15}>
                 <Card className="h-full">
-                  <Badge tone="frost">{field.type}</Badge>
+                  <span className="text-xs uppercase tracking-[0.25em] text-frost-ice/80">
+                    {field.type}
+                  </span>
                   <h3 className="font-display mt-4 text-2xl text-snow-100">
                     {field.name}
                   </h3>
@@ -154,8 +156,8 @@ export default function Home() {
       <section className="py-24">
         <Container>
           <Reveal>
-            <Card className="border-frost-deep/40 bg-gradient-to-br from-night-900 to-night-800/60 py-12 text-center">
-              <h2 className="font-display text-3xl font-bold tracking-wide text-snow-100">
+            <Card className="border-none py-12 text-center">
+              <h2 className="font-display text-3xl tracking-wide text-snow-100">
                 Safları Sıklaştır
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-snow-300/75">

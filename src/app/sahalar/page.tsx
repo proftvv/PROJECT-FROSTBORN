@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-08
- * Son Güncelleme: 2026-07-08
- * Dosya Sürümü  : Update 1
+ * Son Güncelleme: 2026-07-09
+ * Dosya Sürümü  : Update 2
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  */
@@ -14,7 +14,6 @@ import PageHero from "@/components/layout/PageHero";
 import Reveal from "@/components/effects/Reveal";
 import Container from "@/components/ui/Container";
 import Card from "@/components/ui/Card";
-import Badge from "@/components/ui/Badge";
 import { FIELDS } from "@/lib/site-data";
 
 export const metadata: Metadata = {
@@ -53,7 +52,9 @@ export default function FieldsPage() {
                 </div>
 
                 <Card className="[direction:ltr]">
-                  <Badge tone="frost">{field.type}</Badge>
+                  <span className="text-xs uppercase tracking-[0.25em] text-frost-ice/80">
+                    {field.type}
+                  </span>
                   <h2 className="font-display mt-4 text-3xl text-snow-100">
                     {field.name}
                   </h2>

@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-08
- * Son Güncelleme: 2026-07-08
- * Dosya Sürümü  : Update 1
+ * Son Güncelleme: 2026-07-09
+ * Dosya Sürümü  : Update 2
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  */
@@ -13,7 +13,7 @@ import PageHero from "@/components/layout/PageHero";
 import Reveal from "@/components/effects/Reveal";
 import Container from "@/components/ui/Container";
 import Card from "@/components/ui/Card";
-import Badge from "@/components/ui/Badge";
+import RuneLabel from "@/components/ui/RuneLabel";
 
 export const metadata: Metadata = {
   title: "Hakkımızda",
@@ -78,8 +78,8 @@ export default function AboutPage() {
       <section className="pb-24">
         <Container>
           <Reveal className="text-center">
-            <Badge tone="gold">Değerlerimiz</Badge>
-            <h2 className="font-display mt-4 text-3xl font-bold tracking-wide text-snow-100">
+            <RuneLabel>Değerlerimiz</RuneLabel>
+            <h2 className="font-display mt-6 text-3xl tracking-wide text-snow-100">
               Bizi Biz Yapanlar
             </h2>
           </Reveal>

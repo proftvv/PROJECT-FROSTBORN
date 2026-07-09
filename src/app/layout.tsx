@@ -2,24 +2,24 @@
  * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-08
- * Son Güncelleme: 2026-07-08
- * Dosya Sürümü  : Update 2
+ * Son Güncelleme: 2026-07-09
+ * Dosya Sürümü  : Update 3
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  */
 
 import type { Metadata } from "next";
-import { Cinzel, Inter } from "next/font/google";
+import { Metamorphous, Inter } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import AuroraBackground from "@/components/effects/AuroraBackground";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
-const cinzel = Cinzel({
-  variable: "--font-cinzel",
+const metamorphous = Metamorphous({
+  variable: "--font-metamorphous",
   subsets: ["latin"],
-  weight: ["400", "600", "700", "900"],
+  weight: "400",
 });
 
 const inter = Inter({
@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="tr"
-      className={`${cinzel.variable} ${inter.variable} h-full antialiased`}
+      className={`${metamorphous.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <SmoothScroll>

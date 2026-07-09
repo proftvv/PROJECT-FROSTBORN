@@ -14,7 +14,7 @@
 
 import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
-import Badge from "@/components/ui/Badge";
+import RuneLabel from "@/components/ui/RuneLabel";
 
 export default function PageHero({
   badge,
@@ -33,8 +33,8 @@ export default function PageHero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-          <Badge tone="frost">{badge}</Badge>
-          <h1 className="font-display mt-5 text-4xl font-bold tracking-wider text-snow-100 sm:text-5xl">
+          <RuneLabel>{badge}</RuneLabel>
+          <h1 className="font-display mt-6 text-4xl tracking-wider text-snow-100 sm:text-5xl">
             {title}
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-snow-300/75">
