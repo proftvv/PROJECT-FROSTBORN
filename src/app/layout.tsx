@@ -3,7 +3,7 @@
  * PROJECT FROSTBORN — The Nordians
  * Oluşturulma   : 2026-07-08
  * Son Güncelleme: 2026-07-08
- * Dosya Sürümü  : Update 1
+ * Dosya Sürümü  : Update 2
  * dev By Proftvv
  * ═══════════════════════════════════════════════
  */
@@ -11,6 +11,10 @@
 import type { Metadata } from "next";
 import { Cinzel, Inter } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "@/components/providers/SmoothScroll";
+import AuroraBackground from "@/components/effects/AuroraBackground";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const cinzel = Cinzel({
   variable: "--font-cinzel",
@@ -43,7 +47,14 @@ export default function RootLayout({
       lang="tr"
       className={`${cinzel.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SmoothScroll>
+          <AuroraBackground />
+          <Navbar />
+          <div className="flex flex-1 flex-col pt-16">{children}</div>
+          <Footer />
+        </SmoothScroll>
+      </body>
     </html>
   );
 }
