@@ -2,8 +2,8 @@
   ═══════════════════════════════════════════════
   PROJECT FROSTBORN — The Nordians
   Oluşturulma   : 2026-07-08
-  Son Güncelleme: 2026-07-10
-  Dosya Sürümü  : Update 7
+  Son Güncelleme: 2026-07-11
+  Dosya Sürümü  : Update 8
   dev By Proftvv
   ═══════════════════════════════════════════════
 -->
@@ -48,9 +48,11 @@ Proje sürümü `MAJOR.PHASE.UPDATE` formatını kullanır:
 | `0.4.x` | 🏛️ VALHALLA |
 | `0.5.x` | ⚜️ ODIN |
 | `0.6.x` | 📜 SKALD |
+| `0.7.x` | 🧠 MIMIR |
+| `0.8.x` | 🐺 FENRIR |
 | `1.0.0` | ✅ Resmi Yayın (Proftvv onayı) |
 
-> 🐺 FENRIR (mobil) kendi sürüm hattında ilerler: `FENRIR-0.0.001`
+> Not: MIMIR fazı, panel mimarisini dört ayrı ürüne bölen revizyon fazıdır.
 
 ---
 
@@ -104,9 +106,11 @@ Tüm hata kodları `FRB-[MODÜL]-[NUMARA]` formatındadır.
 | `FRB-DB` | Veritabanı | 200–299 |
 | `FRB-API` | API katmanı | 300–399 |
 | `FRB-MAIL` | E-posta (Resend) | 400–499 |
-| `FRB-PANEL` | Üye paneli | 500–599 |
+| `FRB-MEMBER` | Üye paneli | 500–549 |
+| `FRB-TEAM` | Takım oyuncusu paneli | 550–599 |
 | `FRB-ADMIN` | Admin paneli | 600–699 |
-| `FRB-FORUM` | Forum / içerik | 700–799 |
+| `FRB-DEV` | Developer paneli | 700–749 |
+| `FRB-FORUM` | Forum / içerik | 750–799 |
 | `FRB-MEDIA` | Galeri / dosya yükleme | 800–899 |
 | `FRB-MOBILE` | Mobil (FENRIR) | 900–999 |
 
@@ -128,8 +132,10 @@ Tüm hata kodları `FRB-[MODÜL]-[NUMARA]` formatındadır.
 | `FRB-API-301` | Rate limit aşıldı |
 | `FRB-MAIL-400` | E-posta gönderilemedi |
 | `FRB-MAIL-401` | Geçersiz e-posta adresi |
-| `FRB-PANEL-500` | Panel erişim hatası |
+| `FRB-MEMBER-500` | Üye panel erişim hatası |
+| `FRB-TEAM-550` | Takım panel erişim hatası |
 | `FRB-ADMIN-600` | Başvuru işlem hatası |
+| `FRB-DEV-700` | Developer panel işlem hatası |
 
 ### Kurallar
 1. Yeni hata kodu eklenirken ilgili modülün aralığındaki ilk boş numara kullanılır.

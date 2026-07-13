@@ -19,16 +19,19 @@ import { HERO_SLIDES } from "@/lib/site-data";
 
 const INTERVAL_MS = 6000;
 
-export default function PhotoSlider() {
+type Slide = { src: string; alt: string };
+
+export default function PhotoSlider({ slides }: { slides?: Slide[] }) {
+  const allSlides = slides && slides.length > 0 ? slides : HERO_SLIDES;
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(
-      () => setIndex((i) => (i + 1) % HERO_SLIDES.length),
+      () => setIndex((i) => (i + 1) % allSlides.length),
       INTERVAL_MS,
     );
     return () => clearInterval(timer);
-  }, []);
+  }, [allSlides]);
 
   return (
     <div className="absolute inset-0 -z-10 overflow-hidden">
@@ -42,8 +45,8 @@ export default function PhotoSlider() {
           className="absolute inset-0"
         >
           <Image
-            src={HERO_SLIDES[index].src}
-            alt={HERO_SLIDES[index].alt}
+            src={allSlides[index].src}
+            alt={allSlides[index].alt}
             fill
             priority={index === 0}
             className="object-cover"

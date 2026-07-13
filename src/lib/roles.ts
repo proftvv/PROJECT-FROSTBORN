@@ -61,3 +61,11 @@ export function assignableRoles(actor: Role): Role[] {
   if (ROLE_LEVELS[actor] === 4) return ["NORDIAN", "UYE"];
   return [];
 }
+
+/** Kullanıcının varsayılan panel alanını döndürür. */
+export function getPanelHome(role: Role): string {
+  if (role === "DEVELOPER") return "/developer";
+  if (isAdmin(role)) return "/admin";
+  if (isNordian(role)) return "/takim";
+  return "/uye";
+}

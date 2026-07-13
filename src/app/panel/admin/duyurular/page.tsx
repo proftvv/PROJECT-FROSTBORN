@@ -8,42 +8,10 @@
  * ═══════════════════════════════════════════════
  */
 
-import { requireLevel } from "@/lib/guards";
-import { prisma } from "@/lib/prisma";
-import AnnouncementForm from "@/components/panel/admin/AnnouncementForm";
-import Card from "@/components/ui/Card";
+import { redirect } from "next/navigation";
 
 export const metadata = { title: "Duyuru Yönetimi" };
 
-export default async function AdminAnnouncementsPage() {
-  await requireLevel(4);
-  const items = await prisma.announcement.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 20,
-    include: { author: { select: { name: true, callsign: true } } },
-  });
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl text-snow-100">Duyuru Yönetimi</h1>
-        <p className="mt-1 text-sm text-snow-300/60">Yeni duyuru yayınla ve son duyuruları gör.</p>
-      </div>
-      <AnnouncementForm />
-      <div className="space-y-3">
-        {items.map((item) => (
-          <Card key={item.id}>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="font-display text-lg text-snow-100">{item.title}</h2>
-                <p className="text-xs text-snow-300/50">{item.author.callsign ?? item.author.name} · min seviye {item.minLevel}</p>
-              </div>
-              <time className="text-xs text-snow-300/50">{item.createdAt.toLocaleDateString("tr-TR")}</time>
-            </div>
-            <p className="mt-3 whitespace-pre-line text-sm text-snow-300/75">{item.body}</p>
-          </Card>
-        ))}
-      </div>
-    </div>
-  )
+export default function LegacyAdminAnnouncementsRedirectPage() {
+  redirect("/admin/duyurular");
 }

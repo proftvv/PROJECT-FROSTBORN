@@ -14,6 +14,7 @@ import PageHero from "@/components/layout/PageHero";
 import Reveal from "@/components/effects/Reveal";
 import Container from "@/components/ui/Container";
 import Card from "@/components/ui/Card";
+import { prisma } from "@/lib/prisma";
 import { FIELDS } from "@/lib/site-data";
 
 export const metadata: Metadata = {
@@ -22,7 +23,33 @@ export const metadata: Metadata = {
     "Antalya'daki sahalarımız: Meskun Mahal (CQB) ve Açık Orman Alanı.",
 };
 
-export default function FieldsPage() {
+export default async function FieldsPage() {
+  const dbFields = await prisma.gameField.findMany({
+    orderBy: { createdAt: "desc" },
+    include: {
+      photos: {
+        orderBy: { createdAt: "asc" },
+        select: { imageUrl: true },
+      },
+    },
+  });
+
+  const fields =
+    dbFields.length > 0
+      ? dbFields.map((field) => ({
+          slug: field.slug,
+          name: field.name,
+          type: field.type,
+          location: field.location,
+          description: field.description,
+          features: [
+            `${field.location} operasyon alani`,
+            `${field.photos.length} fotograf arsivi`,
+          ],
+          image: field.photos[0]?.imageUrl ?? "/photos/slide-2.svg",
+        }))
+      : FIELDS;
+
   return (
     <main className="flex-1">
       <PageHero
@@ -33,7 +60,7 @@ export default function FieldsPage() {
 
       <section className="pb-24">
         <Container className="space-y-16">
-          {FIELDS.map((field, i) => (
+          {fields.map((field, i) => (
             <Reveal key={field.slug}>
               <div
                 id={field.slug}

@@ -2,17 +2,17 @@
   ═══════════════════════════════════════════════
   PROJECT FROSTBORN — The Nordians
   Oluşturulma   : 2026-07-08
-  Son Güncelleme: 2026-07-10
-  Dosya Sürümü  : Update 8
+  Son Güncelleme: 2026-07-11
+  Dosya Sürümü  : Update 9
   dev By Proftvv
   ═══════════════════════════════════════════════
 -->
 
 <div align="center">
 
-# 🗺️ PROJECT FROSTBORN — Yol Haritası
+# 🗺️ PROJECT FROSTBORN — Yol Haritası (Revize)
 
-*Her faz, bir öncekinin üzerine inşa edilir. Kuzeye giden yol adım adım yürünür.*
+*Her faz, bir öncekinin üzerine inşa edilir. Bu revizyon, panel mimarisini tamamen ayrıştırır.*
 
 </div>
 
@@ -130,7 +130,55 @@
 
 ---
 
-## 🐺 FAZ 6 — FENRIR *(Zincirlenemeyen: Mobil Uygulama)*
+## 🧠 FAZ 6 — MIMIR *(Bilgelik Kuyusu: Panel Reforge)*
+
+> Mimir, bilgeliğin kaynağıdır. Bu fazda panel sistemi sıfırdan ayrıştırılır ve her rol kendi bağımsız ürünü haline gelir.
+
+### Mimari Kararlar (Başlamadan Önce Sabit)
+- [ ] Panel alanları fiziksel olarak ayrılır:
+  - `/uye/*`
+  - `/takim/*`
+  - `/admin/*`
+  - `/developer/*`
+- [ ] Forum panelden tamamen çıkarılır ve yalnızca `/forum/*` altında kalır
+- [ ] Ortak `panel` rotaları kaldırılır veya yeni alanlara yönlendirilir
+- [ ] Her panel için ayrı layout, menü, dashboard ve yetki katmanı kurulur
+
+### Full Fonksiyonel Üye Paneli
+- [ ] Profil, hesap ayarları, kişisel bildirim merkezi
+- [ ] Başvuru/üyelik durum takibi
+- [ ] Kişiye özel etkinlik katılım geçmişi
+
+### Full Fonksiyonel Takım Oyuncusu Paneli
+- [ ] Operasyon notları ve saha görev görünümü
+- [ ] Eğitim içerikleri, antrenman takibi
+- [ ] Takım içi paylaşımlar ve görev akışları
+
+### Full Fonksiyonel Admin Paneli
+- [ ] Üye yaşam döngüsü yönetimi (onay, askı, rol atama)
+- [ ] Başvuru değerlendirme ve karar akışı
+- [ ] Duyuru, etkinlik, içerik moderasyonu
+- [ ] Developer rolünün admin paneline erişimi (override)
+
+### Full Fonksiyonel Developer Paneli
+- [ ] Site genel konfigürasyon yönetimi
+- [ ] Oyun alanları yönetimi (ekle, güncelle, kaldır)
+- [ ] Oyun alanı fotoğraf yönetimi
+- [ ] Sayfa arka plan görselleri yönetimi
+- [ ] Ana sayfa/vitrin içerik blokları yönetimi
+- [ ] Medya ve içerik değişikliklerinde denetim kaydı
+
+### Teknik Çıktılar
+- [ ] RBAC katmanı panel-bazlı policy sistemine taşınır
+- [ ] Action/API yetkileri panel sınırlarına göre bölünür
+- [ ] Geçiş planı: mevcut kullanıcı deneyimi bozulmadan route migration
+- [ ] Uçtan uca test listesi: dört panel için erişim/yetki testi
+
+**Çıktı:** Dört bağımsız, rol bazlı, üretim hazır panel ürün ailesi. 🛠️ **PLANLANDI — hedef sürüm 0.7.000**
+
+---
+
+## 🐺 FAZ 7 — FENRIR *(Zincirlenemeyen: Mobil Uygulama)*
 
 > Fenrir zincire vurulamaz. Takım artık sahada, cepte, her yerde.
 

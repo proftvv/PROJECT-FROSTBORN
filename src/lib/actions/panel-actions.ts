@@ -55,6 +55,8 @@ export async function updateProfile(formData: {
   });
 
   revalidatePath("/panel");
+  revalidatePath("/uye");
+  revalidatePath("/uye/profil");
   return { ok: true, message: "Profil güncellendi." };
 }
 
@@ -93,6 +95,8 @@ export async function submitApplication(formData: {
   });
 
   revalidatePath("/panel/basvuru");
+  revalidatePath("/uye/basvuru");
+  revalidatePath("/uye");
   return { ok: true, message: "Başvurun alındı! Yönetim inceleyip dönüş yapacak." };
 }
 
@@ -119,5 +123,6 @@ export async function sendChatMessage(formData: {
   });
 
   revalidatePath("/panel/sohbet");
+  revalidatePath("/takim/sohbet");
   return { ok: true };
 }

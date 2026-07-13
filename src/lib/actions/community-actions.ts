@@ -222,6 +222,8 @@ export async function createEvent(formData: {
   });
 
   revalidatePath("/panel/etkinlikler");
+  revalidatePath("/takim/etkinlikler");
+  revalidatePath("/forum/etkinlikler");
   return { ok: true, message: "Etkinlik oluşturuldu." };
 }
 
@@ -256,6 +258,8 @@ export async function createGalleryItem(formData: {
 
   revalidatePath("/galeri");
   revalidatePath("/panel/admin/galeri");
+  revalidatePath("/admin/galeri");
+  revalidatePath("/developer/galeri");
   return { ok: true, message: "Galeri görseli eklendi." };
 }
 

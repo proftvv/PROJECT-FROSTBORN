@@ -22,7 +22,7 @@ const LINKS = [
   { href: "/hakkimizda", label: "Hakkımızda" },
   { href: "/takimimiz", label: "Takımımız" },
   { href: "/sahalar", label: "Sahalarımız" },
-  { href: "/panel/forum", label: "Forum" },
+  { href: "/forum", label: "Forum" },
   { href: "/galeri", label: "Galeri" },
   { href: "/iletisim", label: "İletişim" },
 ];

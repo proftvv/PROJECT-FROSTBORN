@@ -12,8 +12,9 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { hasLevel } from "@/lib/roles";
+import { hasLevel, getPanelHome } from "@/lib/roles";
 import type { Session } from "next-auth";
+import type { Role } from "@prisma/client";
 
 /** Oturum zorunlu — yoksa /giris'e yönlendirir. */
 export async function requireUser(): Promise<Session["user"]> {
@@ -27,6 +28,17 @@ export async function requireLevel(
   minLevel: number,
 ): Promise<Session["user"]> {
   const user = await requireUser();
-  if (!hasLevel(user.role, minLevel)) redirect("/panel?err=FRB-AUTH-103");
+  if (!hasLevel(user.role, minLevel)) {
+    redirect(`${getPanelHome(user.role)}?err=FRB-AUTH-103`);
+  }
+  return user;
+}
+
+/** Belirli role sahip kullanıcı zorunlu. */
+export async function requireRole(role: Role): Promise<Session["user"]> {
+  const user = await requireUser();
+  if (user.role !== role) {
+    redirect(`${getPanelHome(user.role)}?err=FRB-AUTH-103`);
+  }
   return user;
 }

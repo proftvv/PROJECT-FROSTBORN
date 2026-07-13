@@ -63,6 +63,7 @@ export async function updateUserRole(formData: {
   );
 
   revalidatePath("/panel/admin/uyeler");
+  revalidatePath("/admin/uyeler");
   return { ok: true, message: "Rütbe güncellendi." };
 }
 
@@ -97,6 +98,7 @@ export async function updateUserStatus(formData: {
   );
 
   revalidatePath("/panel/admin/uyeler");
+  revalidatePath("/admin/uyeler");
   return { ok: true, message: "Üyelik durumu güncellendi." };
 }
 
@@ -166,6 +168,8 @@ export async function decideApplication(formData: {
   );
 
   revalidatePath("/panel/admin/basvurular");
+  revalidatePath("/admin/basvurular");
+  revalidatePath("/admin");
   return {
     ok: true,
     message: approve
@@ -210,7 +214,10 @@ export async function createAnnouncement(formData: {
   );
 
   revalidatePath("/panel/duyurular");
+  revalidatePath("/uye/duyurular");
+  revalidatePath("/takim");
   revalidatePath("/panel/admin/duyurular");
+  revalidatePath("/admin/duyurular");
   return { ok: true, message: "Duyuru yayınlandı." };
 }
 
@@ -254,6 +261,9 @@ export async function createTeamContent(formData: {
 
   revalidatePath("/panel/haritalar");
   revalidatePath("/panel/egitim");
+  revalidatePath("/takim/haritalar");
+  revalidatePath("/takim/egitim");
   revalidatePath("/panel/admin/icerikler");
+  revalidatePath("/admin/icerikler");
   return { ok: true, message: "İçerik eklendi." };
 }
