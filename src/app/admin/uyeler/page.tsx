@@ -11,11 +11,12 @@
 import { requireLevel } from "@/lib/guards";
 import { prisma } from "@/lib/prisma";
 import TeamMemberManager from "@/components/panel/admin/TeamMemberManager";
+import { assignableRoles, canManage } from "@/lib/roles";
 
 export const metadata = { title: "Admin Uye Yonetimi" };
 
 export default async function AdminMembersPage() {
-  await requireLevel(4);
+  const currentUser = await requireLevel(4);
 
   const users = await prisma.user.findMany({
     orderBy: [{ createdAt: "desc" }],
@@ -42,7 +43,12 @@ export default async function AdminMembersPage() {
       </div>
 
       <TeamMemberManager
-        members={users.map((u) => ({ ...u, createdAt: u.createdAt.toISOString() }))}
+        editableRoles={assignableRoles(currentUser.role)}
+        members={users.map((u) => ({
+          ...u,
+          canManage: canManage(currentUser.role, u.role),
+          createdAt: u.createdAt.toISOString(),
+        }))}
       />
     </div>
   );

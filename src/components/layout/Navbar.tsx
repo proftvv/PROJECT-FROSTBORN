@@ -95,13 +95,7 @@ export default function Navbar() {
                 Çıkış
               </Button>
             </div>
-          ) : (
-            <Link href="/giris" className="ml-3">
-              <Button size="sm" variant="outline">
-                Giriş
-              </Button>
-            </Link>
-          )}
+          ) : null}
         </div>
 
         {/* Mobil menü butonu */}
@@ -164,13 +158,7 @@ export default function Navbar() {
                     Çıkış
                   </Button>
                 </div>
-              ) : (
-                <Link href="/giris" className="mt-2">
-                  <Button size="sm" variant="outline" className="w-full">
-                    Giriş
-                  </Button>
-                </Link>
-              )}
+              ) : null}
             </div>
           </motion.div>
         )}

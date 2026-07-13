@@ -14,7 +14,6 @@ import Button from "@/components/ui/Button";
 const inputClass =
   "w-full rounded-lg border border-night-700/70 bg-night-900/70 px-4 py-2.5 text-sm text-snow-100 placeholder:text-snow-300/40 outline-none transition-colors focus:border-frost-ice/60";
 
-const roleOptions: Role[] = ["NORDIAN", "UYE", "YONETICI", "BASKAN", "BASKAN_YARDIMCISI"];
 const statusOptions: MembershipStatus[] = ["ACTIVE", "PENDING", "SUSPENDED"];
 
 type Member = {
@@ -28,10 +27,11 @@ type Member = {
   weapons: string | null;
   role: Role;
   status: MembershipStatus;
+  canManage: boolean;
   createdAt: string;
 };
 
-function MemberCard({ member }: { member: Member }) {
+function MemberCard({ member, editableRoles }: { member: Member; editableRoles: Role[] }) {
   const router = useRouter();
   const [name, setName] = useState(member.name);
   const [callsign, setCallsign] = useState(member.callsign ?? "");
@@ -43,6 +43,10 @@ function MemberCard({ member }: { member: Member }) {
   const [status, setStatus] = useState<MembershipStatus>(member.status);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
+  const locked = !member.canManage;
+  const roleOptions = editableRoles.includes(member.role)
+    ? editableRoles
+    : [member.role, ...editableRoles];
 
   const save = async (e: FormEvent) => {
     e.preventDefault();
@@ -65,6 +69,7 @@ function MemberCard({ member }: { member: Member }) {
   };
 
   const remove = async () => {
+    if (locked) return;
     if (!confirm("Bu uyeyi silmek istiyor musun?")) return;
     setBusy(true);
     const res = await deleteTeamMember({ userId: member.id });
@@ -77,28 +82,36 @@ function MemberCard({ member }: { member: Member }) {
     <Card>
       <form onSubmit={save} className="space-y-3">
         <div className="grid gap-3 md:grid-cols-2">
-          <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} placeholder="Ad Soyad" />
-          <input className={inputClass} value={callsign} onChange={(e) => setCallsign(e.target.value)} placeholder="Callsign" />
-          <input className={inputClass} value={region} onChange={(e) => setRegion(e.target.value)} placeholder="Bolge" />
-          <input className={inputClass} value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="Profil resmi URL" />
-          <select className={inputClass} value={role} onChange={(e) => setRole(e.target.value as Role)}>{roleOptions.map((r) => <option key={r} value={r}>{r}</option>)}</select>
-          <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as MembershipStatus)}>{statusOptions.map((s) => <option key={s} value={s}>{s}</option>)}</select>
+          <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} placeholder="Ad Soyad" disabled={locked || busy} />
+          <input className={inputClass} value={callsign} onChange={(e) => setCallsign(e.target.value)} placeholder="Callsign" disabled={locked || busy} />
+          <input className={inputClass} value={region} onChange={(e) => setRegion(e.target.value)} placeholder="Bolge" disabled={locked || busy} />
+          <input className={inputClass} value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="Profil resmi URL" disabled={locked || busy} />
+          <select className={inputClass} value={role} onChange={(e) => setRole(e.target.value as Role)} disabled={locked || busy}>{roleOptions.map((r) => <option key={r} value={r}>{r}</option>)}</select>
+          <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as MembershipStatus)} disabled={locked || busy}>{statusOptions.map((s) => <option key={s} value={s}>{s}</option>)}</select>
         </div>
-        <textarea className={inputClass} rows={3} value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Kisa aciklama" />
-        <input className={inputClass} value={weapons} onChange={(e) => setWeapons(e.target.value)} placeholder="Silahlar (virgulle)" />
+        <textarea className={inputClass} rows={3} value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Kisa aciklama" disabled={locked || busy} />
+        <input className={inputClass} value={weapons} onChange={(e) => setWeapons(e.target.value)} placeholder="Silahlar (virgulle)" disabled={locked || busy} />
+
+        {locked && <p className="text-xs text-snow-300/60">Bu kullaniciyi duzenleme yetkin yok.</p>}
 
         {msg && <p className="text-xs text-snow-300/80">{msg}</p>}
 
         <div className="flex gap-2">
-          <Button type="submit" size="sm" disabled={busy}>{busy ? "Kaydediliyor..." : "Kaydet"}</Button>
-          <Button type="button" size="sm" variant="ghost" onClick={remove} disabled={busy}>Sil</Button>
+          <Button type="submit" size="sm" disabled={busy || locked}>{busy ? "Kaydediliyor..." : "Kaydet"}</Button>
+          <Button type="button" size="sm" variant="ghost" onClick={remove} disabled={busy || locked}>Sil</Button>
         </div>
       </form>
     </Card>
   );
 }
 
-export default function TeamMemberManager({ members }: { members: Member[] }) {
+export default function TeamMemberManager({
+  members,
+  editableRoles,
+}: {
+  members: Member[];
+  editableRoles: Role[];
+}) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -158,7 +171,7 @@ export default function TeamMemberManager({ members }: { members: Member[] }) {
             <input className={inputClass} value={callsign} onChange={(e) => setCallsign(e.target.value)} placeholder="Callsign" />
             <input className={inputClass} value={region} onChange={(e) => setRegion(e.target.value)} placeholder="Bolge" />
             <input className={inputClass} value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="Profil resmi URL" />
-            <select className={inputClass} value={role} onChange={(e) => setRole(e.target.value as Role)}>{roleOptions.map((r) => <option key={r} value={r}>{r}</option>)}</select>
+            <select className={inputClass} value={role} onChange={(e) => setRole(e.target.value as Role)}>{editableRoles.map((r) => <option key={r} value={r}>{r}</option>)}</select>
             <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as MembershipStatus)}>{statusOptions.map((s) => <option key={s} value={s}>{s}</option>)}</select>
           </div>
           <textarea className={inputClass} rows={3} value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Kisa aciklama" />
@@ -169,7 +182,7 @@ export default function TeamMemberManager({ members }: { members: Member[] }) {
       </Card>
 
       <div className="space-y-3">
-        {members.map((member) => <MemberCard key={member.id} member={member} />)}
+        {members.map((member) => <MemberCard key={member.id} member={member} editableRoles={editableRoles} />)}
       </div>
     </div>
   );

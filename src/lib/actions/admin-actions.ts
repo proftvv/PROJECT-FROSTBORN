@@ -10,7 +10,7 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasLevel } from "@/lib/roles";
+import { assignableRoles, canManage, hasLevel } from "@/lib/roles";
 import type { MembershipStatus, Role } from "@prisma/client";
 
 interface ActionResult {
@@ -63,6 +63,10 @@ export async function createTeamMember(formData: {
   const parsed = memberCreateSchema.safeParse(formData);
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0].message + " [FRB-API-300]" };
+  }
+
+  if (!assignableRoles(admin.role).includes(parsed.data.role)) {
+    return { ok: false, error: "Bu rutbeyi atayamazsin. [FRB-AUTH-103]" };
   }
 
   const email = parsed.data.email.toLowerCase().trim();
@@ -132,6 +136,14 @@ export async function updateTeamMember(formData: {
   const target = await prisma.user.findUnique({ where: { id: parsed.data.userId } });
   if (!target) return { ok: false, error: "Kullanici bulunamadi. [FRB-DB-201]" };
 
+  if (!canManage(admin.role, target.role)) {
+    return { ok: false, error: "Bu kullanici uzerinde yetkin yok. [FRB-AUTH-103]" };
+  }
+
+  if (!assignableRoles(admin.role).includes(parsed.data.role)) {
+    return { ok: false, error: "Bu rutbeyi atayamazsin. [FRB-AUTH-103]" };
+  }
+
   if (target.id === admin.id && parsed.data.role !== target.role) {
     return { ok: false, error: "Kendi rutbeni bu ekrandan degistiremezsin. [FRB-ADMIN-600]" };
   }
@@ -169,6 +181,10 @@ export async function deleteTeamMember(formData: { userId: string }): Promise<Ac
   const target = await prisma.user.findUnique({ where: { id: formData.userId } });
   if (!target) return { ok: false, error: "Kullanici bulunamadi. [FRB-DB-201]" };
   if (target.id === admin.id) return { ok: false, error: "Kendi hesabini silemezsin. [FRB-ADMIN-600]" };
+
+  if (!canManage(admin.role, target.role)) {
+    return { ok: false, error: "Bu kullaniciyi silemezsin. [FRB-AUTH-103]" };
+  }
 
   await prisma.user.delete({ where: { id: target.id } });
 
