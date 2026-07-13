@@ -1,20 +1,7 @@
-/**
- * ═══════════════════════════════════════════════
- * PROJECT FROSTBORN — The Nordians
- * Oluşturulma   : 2026-07-08
- * Son Güncelleme: 2026-07-08
- * Dosya Sürümü  : Update 1
- * dev By Proftvv
- * ═══════════════════════════════════════════════
- *
- * Site geneli veriler — takım fotoğrafları geldiğinde
- * /public/photos altına eklenip buradan bağlanacak.
- */
-
 export const SITE = {
   name: "The Nordians",
-  slogan: "Kuzeyden doğanlar, sahada birleşir.",
-  regions: ["Marmara", "Çanakkale", "Antalya"],
+  slogan: "Disiplinli airsoft kulturu, guclu takim ruhu.",
+  regions: ["Marmara", "Canakkale", "Antalya"],
   email: "iletisim@proftvv.com.tr",
   instagram: "https://instagram.com/thenordians",
 } as const;
@@ -24,85 +11,39 @@ export interface Slide {
   alt: string;
 }
 
-// Takım fotoğrafları hazır olana dek nordic temalı placeholderlar
 export const HERO_SLIDES: Slide[] = [
-  { src: "/photos/slide-1.svg", alt: "The Nordians saha operasyonu" },
-  { src: "/photos/slide-2.svg", alt: "Meskun mahal antrenmanı" },
-  { src: "/photos/slide-3.svg", alt: "Orman sahası operasyonu" },
-  { src: "/photos/slide-4.svg", alt: "Takım toplu fotoğraf" },
+  { src: "/photos/slide-1.svg", alt: "The Nordians ekip fotografi" },
+  { src: "/photos/slide-2.svg", alt: "Takim egitimi" },
+  { src: "/photos/slide-3.svg", alt: "Ortak operasyon" },
+  { src: "/photos/slide-4.svg", alt: "Nordians saha gorunumu" },
 ];
 
-export interface Field {
-  slug: string;
-  name: string;
-  type: string;
-  location: string;
-  description: string;
-  features: string[];
-  image: string;
-}
-
-export const FIELDS: Field[] = [
-  {
-    slug: "meskun-mahal",
-    name: "Meskun Mahal",
-    type: "CQB / Bina İçi Muharebe",
-    location: "Antalya",
-    description:
-      "Dar koridorlar, çok katlı yapılar ve köşe çatışmaları. Yakın mesafe muharebe becerilerinin sınandığı, yüksek tempolu senaryoların sahnesi.",
-    features: [
-      "Çok odalı bina kompleksi",
-      "Gece operasyonu altyapısı",
-      "Senaryo bazlı oyun kurgusu",
-      "Güvenlik brifing alanı",
-    ],
-    image: "/photos/slide-2.svg",
-  },
-  {
-    slug: "orman-sahasi",
-    name: "Açık Orman Alanı",
-    type: "Ormanlık Arazi Muharebesi",
-    location: "Antalya",
-    description:
-      "Doğal örtü, uzun görüş hatları ve arazi hakimiyeti. Kamuflaj, pusu ve uzun menzilli angajmanların hüküm sürdüğü açık arazi sahası.",
-    features: [
-      "Geniş ormanlık parkur",
-      "Doğal siper ve mevziler",
-      "Bayrak / bölge kontrol senaryoları",
-      "Araç yaklaşım yolları",
-    ],
-    image: "/photos/slide-3.svg",
-  },
+export const ABOUT_PARAGRAPHS: string[] = [
+  "The Nordians, farkli sehirlerdeki oyuncularin disiplinli bir takim yapisinda bir araya gelmesiyle kuruldu.",
+  "Amacimiz sadece oyun oynamak degil; sportmenlik, guvenlik ve ekip koordinasyonunu bir standart haline getirmek.",
+  "Her yeni uye, takim kulturunu guclendiren bir sorumlulukla aramiza katilir.",
 ];
 
-export interface TeamRegion {
-  name: string;
-  description: string;
-}
+export const TEAM_VALUES = [
+  {
+    title: "Disiplin",
+    text: "Sahada ve saha disinda net kurallar, net sorumluluk.",
+  },
+  {
+    title: "Saygi",
+    text: "Takim arkadasina, rakibe ve oyunun ruhuna saygi.",
+  },
+  {
+    title: "Gelisim",
+    text: "Her etkinlikte teknik ve taktik olarak daha iyiye gitmek.",
+  },
+] as const;
 
-export const TEAM_REGIONS: TeamRegion[] = [
-  {
-    name: "Marmara",
-    description:
-      "Takımın kuzey kanadı. Bölge etkinlikleri ve ortak operasyonlarla aktif.",
-  },
-  {
-    name: "Çanakkale",
-    description:
-      "Boğazın bekçileri. Arazi oyunlarında bölgenin öncü ekibi.",
-  },
-  {
-    name: "Antalya",
-    description:
-      "Takımın kalbi. İki saha burada — Meskun Mahal ve Açık Orman Alanı.",
-  },
-];
-
-export const GALLERY: Slide[] = [
-  { src: "/photos/slide-1.svg", alt: "Saha operasyonu" },
-  { src: "/photos/slide-2.svg", alt: "Meskun mahal antrenmanı" },
-  { src: "/photos/slide-3.svg", alt: "Orman operasyonu" },
-  { src: "/photos/slide-4.svg", alt: "Takım fotoğrafı" },
-  { src: "/photos/slide-1.svg", alt: "Gece operasyonu" },
-  { src: "/photos/slide-3.svg", alt: "Arazi eğitimi" },
-];
+export const TEAM_RULES = [
+  "Guvenlik ekipmani olmadan oyun alanina girilmez.",
+  "Hakem ve komuta ekibi kararlarina itiraz edilmez; gerekli geri bildirim oyun sonrasinda yapilir.",
+  "Hit alindiginda gecikmeden oyun disi kalinir.",
+  "Takim ici iletisimde saygili ve profesyonel dil kullanilir.",
+  "Ekipman, alan ve ortak kaynaklara zarar verilmez.",
+  "Takim gizliligi ve operasyonel bilgiler disariyla paylasilmaz.",
+] as const;

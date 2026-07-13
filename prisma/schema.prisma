@@ -1,11 +1,3 @@
-// ═══════════════════════════════════════════════
-// PROJECT FROSTBORN — The Nordians
-// Oluşturulma   : 2026-07-09
-// Son Güncelleme: 2026-07-10
-// Dosya Sürümü  : Update 5
-// dev By Proftvv
-// ═══════════════════════════════════════════════
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,315 +7,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ── 6 kademeli rütbe modeli ──
 enum Role {
-  DEVELOPER // Seviye 6 — sistemin tamamı
-  BASKAN // Seviye 5 — tüm yetkiler
-  BASKAN_YARDIMCISI // Seviye 5 — başkanla eşdeğer
-  YONETICI // Seviye 4 — admin paneli
-  NORDIAN // Seviye 3 — takım oyuncusu
-  UYE // Seviye 2 — normal üye
+  DEVELOPER
+  BASKAN
+  BASKAN_YARDIMCISI
+  YONETICI
+  NORDIAN
+  UYE
 }
 
 enum MembershipStatus {
-  PENDING // Başvuru bekliyor
-  ACTIVE // Aktif üye
-  SUSPENDED // Askıya alınmış
+  PENDING
+  ACTIVE
+  SUSPENDED
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
+  id            String           @id @default(cuid())
+  email         String           @unique
   emailVerified DateTime?
   passwordHash  String
   name          String
-  callsign      String?   @unique
+  callsign      String?          @unique
   region        String?
-  role          Role      @default(UYE)
-  status        MembershipStatus @default(PENDING)
+  bio           String?
+  weapons       String?
   avatarUrl     String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  verificationCodes VerificationCode[]
-  applications      Application[]
-  announcements     Announcement[]
-  teamContents      TeamContent[]
-  chatMessages      ChatMessage[]
-  forumTopics       ForumTopic[]
-  forumPosts        ForumPost[]
-  forumProfile      ForumProfile?
-  events            Event[]
-  eventRsvps        EventRsvp[]
-  galleryItems      GalleryItem[]
-  gameFields        GameField[]
-  fieldPhotos       GameFieldPhoto[]
-  heroSlides        HeroSlide[]
+  role          Role             @default(UYE)
+  status        MembershipStatus @default(PENDING)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 
   @@index([role])
   @@index([status])
-}
-
-// E-posta doğrulama & şifre sıfırlama kodları
-enum CodePurpose {
-  EMAIL_VERIFY
-  PASSWORD_RESET
-}
-
-model VerificationCode {
-  id        String      @id @default(cuid())
-  userId    String
-  code      String
-  purpose   CodePurpose
-  expiresAt DateTime
-  createdAt DateTime    @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, purpose])
-}
-
-// ── VALHALLA: Panel modelleri ──
-
-enum ApplicationStatus {
-  PENDING // İncelenmedi
-  APPROVED // Onaylandı
-  REJECTED // Reddedildi
-}
-
-// Takıma katılım başvurusu
-model Application {
-  id         String            @id @default(cuid())
-  userId     String
-  region     String
-  experience String // Airsoft deneyimi
-  motivation String // Neden katılmak istiyor
-  status     ApplicationStatus @default(PENDING)
-  reply      String? // Yönetim yanıtı
-  repliedBy  String? // Yanıtlayan kullanıcı id
-  createdAt  DateTime          @default(now())
-  updatedAt  DateTime          @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([status])
-}
-
-// Duyurular
-model Announcement {
-  id        String   @id @default(cuid())
-  title     String
-  body      String
-  minLevel  Int      @default(2) // Bu seviye ve üstü görür
-  authorId  String
-  createdAt DateTime @default(now())
-
-  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  @@index([minLevel])
-}
-
-enum ContentType {
-  MAP // Saha haritası / kroki
-  TRAINING // Eğitim içeriği
-}
-
-// Nordian'a özel içerikler (haritalar + eğitimler)
-model TeamContent {
-  id          String      @id @default(cuid())
-  type        ContentType
-  title       String
-  description String
-  url         String? // Dosya/video bağlantısı
-  authorId    String
-  createdAt   DateTime    @default(now())
-
-  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  @@index([type])
-}
-
-// Takım içi sohbet (Nordian ve üstü)
-model ChatMessage {
-  id        String   @id @default(cuid())
-  body      String
-  authorId  String
-  createdAt DateTime @default(now())
-
-  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  @@index([createdAt])
-}
-
-// Denetim kaydı — kim, ne zaman, ne yaptı
-model AuditLog {
-  id        String   @id @default(cuid())
-  actorId   String? // Silinen kullanıcılarda null kalabilsin
-  actorName String
-  action    String // Örn: ROLE_UPDATE, APP_APPROVE
-  detail    String
-  createdAt DateTime @default(now())
-
-  @@index([createdAt])
-  @@index([action])
-}
-
-// ── SKALD: Forum, etkinlik ve galeri modelleri ──
-
-model ForumCategory {
-  id          String      @id @default(cuid())
-  title       String      @unique
-  description String
-  minLevel    Int         @default(2)
-  createdAt   DateTime    @default(now())
-
-  topics ForumTopic[]
-
-  @@index([minLevel])
-}
-
-model ForumTopic {
-  id          String      @id @default(cuid())
-  title       String
-  body        String
-  categoryId  String
-  authorId    String
-  pinned      Boolean     @default(false)
-  locked      Boolean     @default(false)
-  viewCount   Int         @default(0)
-  lastViewedAt DateTime?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  category ForumCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  author   User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  posts    ForumPost[]
-
-  @@index([categoryId, createdAt])
-  @@index([viewCount])
-  @@index([lastViewedAt])
-}
-
-model ForumProfile {
-  id              String   @id @default(cuid())
-  userId          String   @unique
-  bio             String?
-  signature       String?
-  favoriteReplica String?
-  playStyle       String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model ForumPost {
-  id        String    @id @default(cuid())
-  body      String
-  topicId   String
-  authorId  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  topic   ForumTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  author  User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  @@index([topicId, createdAt])
-}
-
-model Event {
-  id          String      @id @default(cuid())
-  title       String
-  description String
-  location    String
-  startsAt    DateTime
-  endsAt      DateTime?
-  authorId    String
-  createdAt   DateTime    @default(now())
-
-  author User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  rsvps  EventRsvp[]
-
-  @@index([startsAt])
-}
-
-enum RsvpStatus {
-  GOING
-  MAYBE
-  DECLINED
-}
-
-model EventRsvp {
-  id        String     @id @default(cuid())
-  eventId    String
-  userId     String
-  status     RsvpStatus @default(GOING)
-  note       String?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-
-  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([eventId, userId])
-  @@index([status])
-}
-
-model GalleryItem {
-  id          String    @id @default(cuid())
-  title       String
-  description String?
-  imageUrl    String
-  authorId    String
-  createdAt   DateTime  @default(now())
-
-  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
-}
-
-// ── MIMIR: Developer panelinde yonetilen vitrin varliklari ──
-
-model GameField {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  name        String
-  type        String
-  location    String
-  description String
-  authorId    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  photos GameFieldPhoto[]
-
-  @@index([createdAt])
-}
-
-model GameFieldPhoto {
-  id        String   @id @default(cuid())
-  fieldId   String
-  imageUrl  String
-  caption   String?
-  authorId  String
-  createdAt DateTime @default(now())
-
-  field  GameField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
-  author User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  @@index([fieldId, createdAt])
-}
-
-model HeroSlide {
-  id        String   @id @default(cuid())
-  imageUrl  String
-  alt       String
-  order     Int      @default(0)
-  isActive  Boolean  @default(true)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  @@index([isActive, order])
 }

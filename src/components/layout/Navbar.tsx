@@ -21,15 +21,17 @@ const LINKS = [
   { href: "/", label: "Anasayfa" },
   { href: "/hakkimizda", label: "Hakkımızda" },
   { href: "/takimimiz", label: "Takımımız" },
-  { href: "/sahalar", label: "Sahalarımız" },
-  { href: "/forum", label: "Forum" },
-  { href: "/galeri", label: "Galeri" },
-  { href: "/iletisim", label: "İletişim" },
+  { href: "/kurallarimiz", label: "Kurallarımız" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const canOpenAdmin =
+    session?.user?.role === "DEVELOPER" ||
+    session?.user?.role === "BASKAN" ||
+    session?.user?.role === "BASKAN_YARDIMCISI" ||
+    session?.user?.role === "YONETICI";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -44,7 +46,6 @@ export default function Navbar() {
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
-    if (href === "/forum") return pathname.startsWith("/forum");
     return pathname === href;
   };
 
@@ -81,9 +82,11 @@ export default function Navbar() {
           ))}
           {session?.user ? (
             <div className="ml-3 flex items-center gap-2">
-              <Link href="/panel">
-                <Button size="sm">Panel</Button>
-              </Link>
+              {canOpenAdmin && (
+                <Link href="/admin">
+                  <Button size="sm">Panel</Button>
+                </Link>
+              )}
               <Button
                 size="sm"
                 variant="ghost"
@@ -145,11 +148,13 @@ export default function Navbar() {
               ))}
               {session?.user ? (
                 <div className="mt-2 flex flex-col gap-2">
-                  <Link href="/panel">
-                    <Button size="sm" className="w-full">
-                      Panel
-                    </Button>
-                  </Link>
+                  {canOpenAdmin && (
+                    <Link href="/admin">
+                      <Button size="sm" className="w-full">
+                        Panel
+                      </Button>
+                    </Link>
+                  )}
                   <Button
                     size="sm"
                     variant="ghost"

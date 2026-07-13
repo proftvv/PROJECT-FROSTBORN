@@ -1,26 +1,23 @@
 /**
- * ═══════════════════════════════════════════════
  * PROJECT FROSTBORN — The Nordians
- * Oluşturulma   : 2026-07-09
- * Son Güncelleme: 2026-07-10
- * Dosya Sürümü  : Update 2
- * dev By Proftvv
- * ═══════════════════════════════════════════════
- *
- * ODIN — admin server action'ları: rol/durum yönetimi, başvuru kararı.
+ * Admin actions: takim uye yonetimi.
  */
 
 "use server";
 
-import { revalidatePath } from "next/cache";
+import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
-import { logAudit } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
-import { hasLevel, canManage, assignableRoles } from "@/lib/roles";
-import { sendApplicationResultEmail } from "@/lib/mail";
-import type { ActionResult } from "@/lib/actions/auth-actions";
-import type { Role, MembershipStatus, ContentType } from "@prisma/client";
+import { hasLevel } from "@/lib/roles";
+import type { MembershipStatus, Role } from "@prisma/client";
+
+interface ActionResult {
+  ok: boolean;
+  error?: string;
+  message?: string;
+}
 
 async function requireAdminSession() {
   const session = await auth();
@@ -29,241 +26,152 @@ async function requireAdminSession() {
   return session.user;
 }
 
-export async function updateUserRole(formData: {
-  userId: string;
-  role: Role;
-}): Promise<ActionResult> {
-  const admin = await requireAdminSession();
-  if (!admin) return { ok: false, error: "Yetkin yok. [FRB-AUTH-103]" };
-
-  if (formData.userId === admin.id) {
-    return { ok: false, error: "Kendi rütbeni değiştiremezsin. [FRB-ADMIN-600]" };
-  }
-
-  const target = await prisma.user.findUnique({ where: { id: formData.userId } });
-  if (!target) return { ok: false, error: "Kullanıcı bulunamadı. [FRB-DB-201]" };
-
-  if (!canManage(admin.role, target.role)) {
-    return { ok: false, error: "Bu kullanıcıyı yönetemezsin. [FRB-AUTH-103]" };
-  }
-  if (!assignableRoles(admin.role).includes(formData.role)) {
-    return { ok: false, error: "Bu rütbeyi atayamazsın. [FRB-AUTH-103]" };
-  }
-
-  await prisma.user.update({
-    where: { id: target.id },
-    data: { role: formData.role },
-  });
-
-  await logAudit(
-    admin.id,
-    admin.callsign ?? admin.name,
-    "ROLE_UPDATE",
-    `${target.email} -> ${formData.role}`,
-  );
-
-  revalidatePath("/panel/admin/uyeler");
+function refreshAdminPages() {
+  revalidatePath("/admin");
   revalidatePath("/admin/uyeler");
-  return { ok: true, message: "Rütbe güncellendi." };
+  revalidatePath("/takimimiz");
 }
 
-export async function updateUserStatus(formData: {
-  userId: string;
+const memberCreateSchema = z.object({
+  name: z.string().min(2).max(80),
+  email: z.string().email(),
+  password: z.string().min(8).max(120),
+  callsign: z.string().max(30).optional().default(""),
+  region: z.string().max(80).optional().default(""),
+  avatarUrl: z.string().url().or(z.literal("")),
+  bio: z.string().max(2000).optional().default(""),
+  weapons: z.string().max(500).optional().default(""),
+  role: z.enum(["NORDIAN", "UYE", "YONETICI", "BASKAN", "BASKAN_YARDIMCISI"] satisfies [Role, ...Role[]]),
+  status: z.enum(["ACTIVE", "PENDING", "SUSPENDED"] satisfies [MembershipStatus, ...MembershipStatus[]]),
+});
+
+export async function createTeamMember(formData: {
+  name: string;
+  email: string;
+  password: string;
+  callsign?: string;
+  region?: string;
+  avatarUrl?: string;
+  bio?: string;
+  weapons?: string;
+  role: Role;
   status: MembershipStatus;
 }): Promise<ActionResult> {
   const admin = await requireAdminSession();
   if (!admin) return { ok: false, error: "Yetkin yok. [FRB-AUTH-103]" };
 
-  if (formData.userId === admin.id) {
-    return { ok: false, error: "Kendi durumunu değiştiremezsin. [FRB-ADMIN-600]" };
+  const parsed = memberCreateSchema.safeParse(formData);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0].message + " [FRB-API-300]" };
   }
 
-  const target = await prisma.user.findUnique({ where: { id: formData.userId } });
-  if (!target) return { ok: false, error: "Kullanıcı bulunamadı. [FRB-DB-201]" };
+  const email = parsed.data.email.toLowerCase().trim();
+  const exists = await prisma.user.findUnique({ where: { email } });
+  if (exists) return { ok: false, error: "Bu e-posta zaten kayitli. [FRB-DB-202]" };
 
-  if (!canManage(admin.role, target.role)) {
-    return { ok: false, error: "Bu kullanıcıyı yönetemezsin. [FRB-AUTH-103]" };
+  if (parsed.data.callsign.trim()) {
+    const callsignExists = await prisma.user.findFirst({
+      where: { callsign: parsed.data.callsign.trim() },
+    });
+    if (callsignExists) return { ok: false, error: "Bu callsign zaten kullanimda. [FRB-DB-202]" };
+  }
+
+  const passwordHash = await bcrypt.hash(parsed.data.password, 12);
+
+  await prisma.user.create({
+    data: {
+      name: parsed.data.name.trim(),
+      email,
+      passwordHash,
+      emailVerified: new Date(),
+      callsign: parsed.data.callsign.trim() || null,
+      region: parsed.data.region?.trim() || null,
+      avatarUrl: parsed.data.avatarUrl.trim() || null,
+      bio: parsed.data.bio?.trim() || null,
+      weapons: parsed.data.weapons?.trim() || null,
+      role: parsed.data.role,
+      status: parsed.data.status,
+    },
+  });
+
+  refreshAdminPages();
+  return { ok: true, message: "Takim uyesi eklendi." };
+}
+
+const memberUpdateSchema = z.object({
+  userId: z.string().min(1),
+  name: z.string().min(2).max(80),
+  callsign: z.string().max(30).optional().default(""),
+  region: z.string().max(80).optional().default(""),
+  avatarUrl: z.string().url().or(z.literal("")),
+  bio: z.string().max(2000).optional().default(""),
+  weapons: z.string().max(500).optional().default(""),
+  role: z.enum(["NORDIAN", "UYE", "YONETICI", "BASKAN", "BASKAN_YARDIMCISI"] satisfies [Role, ...Role[]]),
+  status: z.enum(["ACTIVE", "PENDING", "SUSPENDED"] satisfies [MembershipStatus, ...MembershipStatus[]]),
+});
+
+export async function updateTeamMember(formData: {
+  userId: string;
+  name: string;
+  callsign?: string;
+  region?: string;
+  avatarUrl?: string;
+  bio?: string;
+  weapons?: string;
+  role: Role;
+  status: MembershipStatus;
+}): Promise<ActionResult> {
+  const admin = await requireAdminSession();
+  if (!admin) return { ok: false, error: "Yetkin yok. [FRB-AUTH-103]" };
+
+  const parsed = memberUpdateSchema.safeParse(formData);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0].message + " [FRB-API-300]" };
+  }
+
+  const target = await prisma.user.findUnique({ where: { id: parsed.data.userId } });
+  if (!target) return { ok: false, error: "Kullanici bulunamadi. [FRB-DB-201]" };
+
+  if (target.id === admin.id && parsed.data.role !== target.role) {
+    return { ok: false, error: "Kendi rutbeni bu ekrandan degistiremezsin. [FRB-ADMIN-600]" };
+  }
+
+  const callsign = parsed.data.callsign.trim();
+  if (callsign) {
+    const callsignExists = await prisma.user.findFirst({
+      where: { callsign, NOT: { id: target.id } },
+    });
+    if (callsignExists) return { ok: false, error: "Bu callsign zaten kullanimda. [FRB-DB-202]" };
   }
 
   await prisma.user.update({
     where: { id: target.id },
-    data: { status: formData.status },
-  });
-
-  await logAudit(
-    admin.id,
-    admin.callsign ?? admin.name,
-    "STATUS_UPDATE",
-    `${target.email} -> ${formData.status}`,
-  );
-
-  revalidatePath("/panel/admin/uyeler");
-  revalidatePath("/admin/uyeler");
-  return { ok: true, message: "Üyelik durumu güncellendi." };
-}
-
-const decisionSchema = z.object({
-  applicationId: z.string().min(1),
-  approve: z.boolean(),
-  reply: z.string().min(2, "Yanıt yazmalısın").max(1000),
-});
-
-export async function decideApplication(formData: {
-  applicationId: string;
-  approve: boolean;
-  reply: string;
-}): Promise<ActionResult> {
-  const admin = await requireAdminSession();
-  if (!admin) return { ok: false, error: "Yetkin yok. [FRB-AUTH-103]" };
-
-  const parsed = decisionSchema.safeParse(formData);
-  if (!parsed.success) {
-    return { ok: false, error: parsed.error.issues[0].message + " [FRB-API-300]" };
-  }
-
-  const application = await prisma.application.findUnique({
-    where: { id: parsed.data.applicationId },
-    include: { user: true },
-  });
-  if (!application) {
-    return { ok: false, error: "Başvuru bulunamadı. [FRB-DB-201]" };
-  }
-  if (application.status !== "PENDING") {
-    return { ok: false, error: "Bu başvuru zaten yanıtlanmış. [FRB-ADMIN-600]" };
-  }
-
-  const { approve, reply } = parsed.data;
-
-  await prisma.$transaction([
-    prisma.application.update({
-      where: { id: application.id },
-      data: {
-        status: approve ? "APPROVED" : "REJECTED",
-        reply,
-        repliedBy: admin.id,
-      },
-    }),
-    ...(approve
-      ? [
-          prisma.user.update({
-            where: { id: application.userId },
-            data: { role: "NORDIAN" as Role, status: "ACTIVE" as MembershipStatus },
-          }),
-        ]
-      : []),
-  ]);
-
-  const mail = await sendApplicationResultEmail(
-    application.user.email,
-    application.user.name,
-    approve,
-    reply,
-  );
-
-  await logAudit(
-    admin.id,
-    admin.callsign ?? admin.name,
-    approve ? "APP_APPROVE" : "APP_REJECT",
-    `${application.user.email} | ${reply}`,
-  );
-
-  revalidatePath("/panel/admin/basvurular");
-  revalidatePath("/admin/basvurular");
-  revalidatePath("/admin");
-  return {
-    ok: true,
-    message: approve
-      ? `Başvuru onaylandı, ${application.user.name} artık Nordian.${mail.ok ? " E-posta gönderildi." : " (E-posta gönderilemedi [FRB-MAIL-400])"}`
-      : `Başvuru reddedildi.${mail.ok ? " E-posta gönderildi." : " (E-posta gönderilemedi [FRB-MAIL-400])"}`,
-  };
-}
-
-const announcementSchema = z.object({
-  title: z.string().min(3, "Başlık en az 3 karakter").max(120),
-  body: z.string().min(5, "Duyuru içeriği çok kısa").max(4000),
-  minLevel: z.coerce.number().min(2).max(6),
-});
-
-export async function createAnnouncement(formData: {
-  title: string;
-  body: string;
-  minLevel: number;
-}): Promise<ActionResult> {
-  const admin = await requireAdminSession();
-  if (!admin) return { ok: false, error: "Yetkin yok. [FRB-AUTH-103]" };
-
-  const parsed = announcementSchema.safeParse(formData);
-  if (!parsed.success) {
-    return { ok: false, error: parsed.error.issues[0].message + " [FRB-API-300]" };
-  }
-
-  await prisma.announcement.create({
     data: {
-      authorId: admin.id,
-      title: parsed.data.title.trim(),
-      body: parsed.data.body.trim(),
-      minLevel: parsed.data.minLevel,
+      name: parsed.data.name.trim(),
+      callsign: callsign || null,
+      region: parsed.data.region?.trim() || null,
+      avatarUrl: parsed.data.avatarUrl.trim() || null,
+      bio: parsed.data.bio?.trim() || null,
+      weapons: parsed.data.weapons?.trim() || null,
+      role: parsed.data.role,
+      status: parsed.data.status,
     },
   });
 
-  await logAudit(
-    admin.id,
-    admin.callsign ?? admin.name,
-    "ANNOUNCEMENT_CREATE",
-    parsed.data.title.trim(),
-  );
-
-  revalidatePath("/panel/duyurular");
-  revalidatePath("/uye/duyurular");
-  revalidatePath("/takim");
-  revalidatePath("/panel/admin/duyurular");
-  revalidatePath("/admin/duyurular");
-  return { ok: true, message: "Duyuru yayınlandı." };
+  refreshAdminPages();
+  return { ok: true, message: "Takim uyesi guncellendi." };
 }
 
-const contentSchema = z.object({
-  type: z.enum(["MAP", "TRAINING"] satisfies [ContentType, ...ContentType[]]),
-  title: z.string().min(3, "Başlık en az 3 karakter").max(120),
-  description: z.string().min(5, "Açıklama çok kısa").max(2000),
-  url: z.string().url("Geçerli bir bağlantı gir").or(z.literal("")),
-});
-
-export async function createTeamContent(formData: {
-  type: ContentType;
-  title: string;
-  description: string;
-  url: string;
-}): Promise<ActionResult> {
+export async function deleteTeamMember(formData: { userId: string }): Promise<ActionResult> {
   const admin = await requireAdminSession();
   if (!admin) return { ok: false, error: "Yetkin yok. [FRB-AUTH-103]" };
 
-  const parsed = contentSchema.safeParse(formData);
-  if (!parsed.success) {
-    return { ok: false, error: parsed.error.issues[0].message + " [FRB-API-300]" };
-  }
+  const target = await prisma.user.findUnique({ where: { id: formData.userId } });
+  if (!target) return { ok: false, error: "Kullanici bulunamadi. [FRB-DB-201]" };
+  if (target.id === admin.id) return { ok: false, error: "Kendi hesabini silemezsin. [FRB-ADMIN-600]" };
 
-  await prisma.teamContent.create({
-    data: {
-      authorId: admin.id,
-      type: parsed.data.type,
-      title: parsed.data.title.trim(),
-      description: parsed.data.description.trim(),
-      url: parsed.data.url || null,
-    },
-  });
+  await prisma.user.delete({ where: { id: target.id } });
 
-  await logAudit(
-    admin.id,
-    admin.callsign ?? admin.name,
-    "CONTENT_CREATE",
-    `${parsed.data.type} | ${parsed.data.title.trim()}`,
-  );
-
-  revalidatePath("/panel/haritalar");
-  revalidatePath("/panel/egitim");
-  revalidatePath("/takim/haritalar");
-  revalidatePath("/takim/egitim");
-  revalidatePath("/panel/admin/icerikler");
-  revalidatePath("/admin/icerikler");
-  return { ok: true, message: "İçerik eklendi." };
+  refreshAdminPages();
+  return { ok: true, message: "Takim uyesi silindi." };
 }

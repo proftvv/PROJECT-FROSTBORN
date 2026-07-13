@@ -14,31 +14,12 @@ import Reveal from "@/components/effects/Reveal";
 import Container from "@/components/ui/Container";
 import Card from "@/components/ui/Card";
 import RuneLabel from "@/components/ui/RuneLabel";
+import { ABOUT_PARAGRAPHS, TEAM_VALUES } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Hakkımızda",
-  description:
-    "The Nordians'ın hikayesi — çok şehirli bir airsoft takımının doğuşu, değerleri ve vizyonu.",
+  description: "The Nordians takim detaylari, kulturu ve temel degerleri.",
 };
-
-const VALUES = [
-  {
-    title: "Disiplin",
-    text: "Sahada da saha dışında da söz tektir. Brifinge uyulur, takım arkadaşı yalnız bırakılmaz.",
-  },
-  {
-    title: "Kardeşlik",
-    text: "Üç şehir, tek bayrak. Nordian olmak bir üyelikten fazlası — bir aileye katılmaktır.",
-  },
-  {
-    title: "Sportmenlik",
-    text: "Hit alınır, el kalkar. Dürüst oyun bizim için skordan her zaman daha değerlidir.",
-  },
-  {
-    title: "Gelişim",
-    text: "Her operasyon bir ders, her senaryo bir sınav. Sürekli eğitim ve taktik gelişim esastır.",
-  },
-];
 
 export default function AboutPage() {
   return (
@@ -46,30 +27,16 @@ export default function AboutPage() {
       <PageHero
         badge="Hikayemiz"
         title="HAKKIMIZDA"
-        description="Kuzeyin soğukkanlılığını sahaya taşıyan bir takım."
+        description="Takimimizin kulturu, hedefi ve operasyon anlayisi."
       />
 
       <section className="pb-24">
         <Container className="max-w-3xl">
           <Reveal>
             <div className="space-y-5 leading-relaxed text-snow-300/80">
-              <p>
-                The Nordians, airsoft tutkusunu disiplinle birleştiren
-                oyuncuların bir araya gelmesiyle doğdu. Bugün Marmara,
-                Çanakkale ve Antalya bölgelerinde aktif olan takımımız, her
-                bölgede aynı ruhu taşıyor: soğukkanlılık, taktik zeka ve
-                sarsılmaz takım bağı.
-              </p>
-              <p>
-                Antalya&apos;daki iki sahamız — Meskun Mahal ve Açık Orman
-                Alanı — yalnızca oyun alanı değil; eğitimlerimizin,
-                senaryolarımızın ve takım kültürümüzün merkezi.
-              </p>
-              <p>
-                Amacımız büyümek değil, doğru insanlarla büyümek. Kapımız;
-                sportmenliğe değer veren, takımına sahip çıkan ve sahada
-                gelişmeye aç herkese açık.
-              </p>
+              {ABOUT_PARAGRAPHS.map((text) => (
+                <p key={text}>{text}</p>
+              ))}
             </div>
           </Reveal>
         </Container>
@@ -85,7 +52,7 @@ export default function AboutPage() {
           </Reveal>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2">
-            {VALUES.map((value, i) => (
+            {TEAM_VALUES.map((value, i) => (
               <Reveal key={value.title} delay={i * 0.1}>
                 <Card className="h-full">
                   <h3 className="font-display text-xl text-frost-ice">

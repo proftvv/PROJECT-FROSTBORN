@@ -15,11 +15,7 @@ import { ROLE_LABELS } from "@/lib/roles";
 
 const ITEMS: AreaNavItem[] = [
   { href: "/admin", label: "Dashboard", icon: "⚜" },
-  { href: "/admin/basvurular", label: "Basvurular", icon: "📥" },
-  { href: "/admin/uyeler", label: "Uye Yonetimi", icon: "♟" },
-  { href: "/admin/duyurular", label: "Duyurular", icon: "📢" },
-  { href: "/admin/icerikler", label: "Icerikler", icon: "🗂" },
-  { href: "/admin/galeri", label: "Galeri", icon: "🖼" },
+  { href: "/admin/uyeler", label: "Takim Kisileri", icon: "♟" },
 ];
 
 export const metadata = { title: "Admin Paneli" };

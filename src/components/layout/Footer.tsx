@@ -23,9 +23,8 @@ export default function Footer() {
         <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-snow-300/70">
           <Link href="/hakkimizda" className="hover:text-frost-ice">Hakkımızda</Link>
           <Link href="/takimimiz" className="hover:text-frost-ice">Takımımız</Link>
-          <Link href="/sahalar" className="hover:text-frost-ice">Sahalarımız</Link>
-          <Link href="/galeri" className="hover:text-frost-ice">Galeri</Link>
-          <Link href="/iletisim" className="hover:text-frost-ice">İletişim</Link>
+          <Link href="/kurallarimiz" className="hover:text-frost-ice">Kurallarımız</Link>
+          <Link href="/admin" className="hover:text-frost-ice">Admin Paneli</Link>
         </nav>
 
         <p className="text-xs text-snow-300/50">

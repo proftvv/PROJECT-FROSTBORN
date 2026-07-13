@@ -30,12 +30,12 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "The Nordians | Airsoft Takımı",
+    default: "The Nordians | Resmi Web Sitesi",
     template: "%s | The Nordians",
   },
   description:
-    "The Nordians — Marmara, Çanakkale ve Antalya bölgelerinde aktif çok şehirli airsoft takımı. Antalya'da Meskun Mahal ve Açık Orman sahalarıyla hizmetinizde.",
-  keywords: ["airsoft", "the nordians", "airsoft takımı", "antalya airsoft", "meskun mahal"],
+    "The Nordians resmi web sitesi: Anasayfa, Hakkimizda, Takimimiz ve Kurallarimiz.",
+  keywords: ["the nordians", "airsoft", "takim", "kurallar", "resmi site"],
 };
 
 export default function RootLayout({
